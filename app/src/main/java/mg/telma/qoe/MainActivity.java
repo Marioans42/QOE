@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         List<MainScreen> screens = new ArrayList<>();
         screens.add(MainScreen.INTERNET);
+        screens.add(MainScreen.CALL);
 
         mainPagerAdapter.setItems(screens);
 

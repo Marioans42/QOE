@@ -1,17 +1,13 @@
-package mg.telma.qoe.activity;
+package mg.telma.qoe.ui.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.DecimalFormat;
 
@@ -46,15 +42,15 @@ public class CellularActivity extends BaseActivity {
         mURL = "http://www.youtube.com";
 
         // Get the widgets reference from XML layout
-        mRelativeLayout = (RelativeLayout) findViewById(R.id.rl);
+    /*    mRelativeLayout = (RelativeLayout) findViewById(R.id.rl);
         mTextView = (TextView) findViewById(R.id.tv);
         mButton = (Button) findViewById(R.id.btn);
-        mWebView = (WebView) findViewById(R.id.web_view);
+        mWebView = (WebView) findViewById(R.id.web_view);*/
 
 
 
         // Set a click listener for button widget
-
+/*
         mButton.setOnClickListener(view -> {
             // Set a WebViewClient for WebView
             mWebView.setWebViewClient(new WebViewClient(){
@@ -91,6 +87,6 @@ public class CellularActivity extends BaseActivity {
 
             // Load the url in the WebView
             mWebView.loadUrl(mURL);
-        });
+        });*/
     }
 }

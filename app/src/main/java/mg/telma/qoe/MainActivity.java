@@ -1,55 +1,78 @@
 package mg.telma.qoe;
 
 import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.view.View;
-import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity {
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
- /*   @Override
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import mg.telma.qoe.adapter.MainPagerAdapter;
+import mg.telma.qoe.enums.MainScreen;
+
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
+
+    private ViewPager viewPager;
+    private BottomNavigationView bottomNavigationView;
+    private MainPagerAdapter mainPagerAdapter;
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+        viewPager = findViewById(R.id.view_pager);
+        bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(mainPagerAdapter);
+
+        List<MainScreen> screens = new ArrayList<>();
+        screens.add(MainScreen.INTERNET);
+
+        mainPagerAdapter.setItems(screens);
+
+        MainScreen defaultScreen = MainScreen.INTERNET;
+
+
+
+        selectBottomNavigationViewMenuItem(defaultScreen.getMenuItemId());
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+
+        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            public void onPageSelected(int position) {
+                MainScreen mainScreen = mainPagerAdapter.getItems().get(position);
+                selectBottomNavigationViewMenuItem(mainScreen.getMenuItemId());
             }
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
+
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        MainScreen screen = MainScreen.getMainScreenForMenuItem(menuItem.getItemId());
+        if(screen != null) {
+            scrollToScreen(screen);
             return true;
         }
+        return false;
+    }
 
-        return super.onOptionsItemSelected(item);
-    }*/
+    private void selectBottomNavigationViewMenuItem (@IdRes int menuItemId) {
+        bottomNavigationView.setSelectedItemId(menuItemId);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+    }
+
+    private void scrollToScreen(MainScreen mainScreen) {
+        int screenPosition = mainPagerAdapter.getItems().indexOf(mainScreen);
+        if(screenPosition != viewPager.getCurrentItem()) {
+           viewPager.setCurrentItem(screenPosition);
+        }
+    }
 }

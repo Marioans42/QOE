@@ -1,4 +1,4 @@
-package mg.telma.qoe.activity;
+package mg.telma.qoe.ui.activity;
 
 
 import android.graphics.Color;
@@ -13,6 +13,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.achartengine.ChartFactory;
+import org.achartengine.GraphicalView;
+import org.achartengine.model.XYMultipleSeriesDataset;
+import org.achartengine.model.XYSeries;
+import org.achartengine.renderer.XYMultipleSeriesRenderer;
+import org.achartengine.renderer.XYSeriesRenderer;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,13 +31,6 @@ import mg.telma.qoe.service.DownloadTestService;
 import mg.telma.qoe.service.PingTestService;
 import mg.telma.qoe.service.UploadTestService;
 import mg.telma.qoe.utils.TestHostsHandler;
-
-import org.achartengine.ChartFactory;
-import org.achartengine.GraphicalView;
-import org.achartengine.model.XYMultipleSeriesDataset;
-import org.achartengine.model.XYSeries;
-import org.achartengine.renderer.XYMultipleSeriesRenderer;
-import org.achartengine.renderer.XYSeriesRenderer;
 
 
 public class SpeedTestActivity extends BaseActivity {
@@ -92,6 +92,7 @@ public class SpeedTestActivity extends BaseActivity {
                         try {
                             Thread.sleep(100);
                         } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
                         if (timeCount <= 0) {
                             runOnUiThread(new Runnable() {
@@ -295,26 +296,23 @@ public class SpeedTestActivity extends BaseActivity {
                             });
 
                             //Update chart
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    // Creating an  XYSeries for Income
-                                    XYSeries pingSeries = new XYSeries("");
-                                    pingSeries.setTitle("");
+                            runOnUiThread(() -> {
+                                // Creating an  XYSeries for Income
+                                XYSeries pingSeries = new XYSeries("");
+                                pingSeries.setTitle("");
 
-                                    int count = 0;
-                                    List<Double> tmpLs = new ArrayList<>(pingRateList);
-                                    for (Double val : tmpLs) {
-                                        pingSeries.add(count++, val);
-                                    }
-
-                                    XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
-                                    dataset.addSeries(pingSeries);
-
-                                    GraphicalView chartView = ChartFactory.getLineChartView(getBaseContext(), dataset, multiPingRenderer);
-                                    chartPing.addView(chartView, 0);
-
+                                int count = 0;
+                                List<Double> tmpLs = new ArrayList<>(pingRateList);
+                                for (Double val : tmpLs) {
+                                    pingSeries.add(count++, val);
                                 }
+
+                                XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
+                                dataset.addSeries(pingSeries);
+
+                                GraphicalView chartView = ChartFactory.getLineChartView(getBaseContext(), dataset, multiPingRenderer);
+                                chartPing.addView(chartView, 0);
+
                             });
                         }
 
@@ -340,41 +338,33 @@ public class SpeedTestActivity extends BaseActivity {
                                 downloadRateList.add(downloadRate);
                                 position = getPositionByRate(downloadRate);
 
-                                runOnUiThread(new Runnable() {
-
-                                    @Override
-                                    public void run() {
-                                        rotate = new RotateAnimation(lastPosition, position, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-                                        rotate.setInterpolator(new LinearInterpolator());
-                                        rotate.setDuration(100);
-                                        barImageView.startAnimation(rotate);
-                                        downloadTextView.setText(dec.format(downloadTest.getInstantDownloadRate()) + " Mbps");
-
-                                    }
+                                runOnUiThread(() -> {
+                                    rotate = new RotateAnimation(lastPosition, position, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                                    rotate.setInterpolator(new LinearInterpolator());
+                                    rotate.setDuration(100);
+                                    barImageView.startAnimation(rotate);
+                                    downloadTextView.setText(dec.format(downloadTest.getInstantDownloadRate()) + " Mbps");
 
                                 });
                                 lastPosition = position;
 
                                 //Update chart
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        // Creating an  XYSeries for Income
-                                        XYSeries downloadSeries = new XYSeries("");
-                                        downloadSeries.setTitle("");
+                                runOnUiThread(() -> {
+                                    // Creating an  XYSeries for Income
+                                    XYSeries downloadSeries = new XYSeries("");
+                                    downloadSeries.setTitle("");
 
-                                        List<Double> tmpLs = new ArrayList<>(downloadRateList);
-                                        int count = 0;
-                                        for (Double val : tmpLs) {
-                                            downloadSeries.add(count++, val);
-                                        }
-
-                                        XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
-                                        dataset.addSeries(downloadSeries);
-
-                                        GraphicalView chartView = ChartFactory.getLineChartView(getBaseContext(), dataset, multiDownloadRenderer);
-                                        chartDownload.addView(chartView, 0);
+                                    List<Double> tmpLs = new ArrayList<>(downloadRateList);
+                                    int count = 0;
+                                    for (Double val : tmpLs) {
+                                        downloadSeries.add(count++, val);
                                     }
+
+                                    XYMultipleSeriesDataset dataset = new XYMultipleSeriesDataset();
+                                    dataset.addSeries(downloadSeries);
+
+                                    GraphicalView chartView = ChartFactory.getLineChartView(getBaseContext(), dataset, multiDownloadRenderer);
+                                    chartDownload.addView(chartView, 0);
                                 });
 
                             }
@@ -389,12 +379,7 @@ public class SpeedTestActivity extends BaseActivity {
                                     System.out.println("Upload error...");
                                 } else {
                                     //Success
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            uploadTextView.setText(dec.format(uploadTest.getFinalUploadRate()) + " Mbps");
-                                        }
-                                    });
+                                    runOnUiThread(() -> uploadTextView.setText(dec.format(uploadTest.getFinalUploadRate()) + " Mbps"));
                                 }
                             } else {
                                 //Calc position
@@ -457,7 +442,7 @@ public class SpeedTestActivity extends BaseActivity {
                             uploadTestFinished = true;
                         }
 
-                        if (pingTestStarted && !pingTestFinished) {
+                        if (!pingTestFinished) {
                             try {
                                 Thread.sleep(300);
                             } catch (InterruptedException e) {

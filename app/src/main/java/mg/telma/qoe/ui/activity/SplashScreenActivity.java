@@ -1,4 +1,4 @@
-package mg.telma.qoe.activity;
+package mg.telma.qoe.ui.activity;
 
 import android.content.Intent;
 import android.os.Handler;
@@ -27,7 +27,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             @Override
             public void run() {
                 SplashScreenActivity splashScreenActivity = SplashScreenActivity.this;
-                splashScreenActivity.mMainPagerIntent = new Intent(splashScreenActivity, CellularActivity.class);
+                splashScreenActivity.mMainPagerIntent = new Intent(splashScreenActivity, MainActivity.class);
                 splashScreenActivity.startActivityForResult(mMainPagerIntent, 1);
                 SplashScreenActivity.this.finish();
             }

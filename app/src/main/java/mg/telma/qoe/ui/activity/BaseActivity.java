@@ -1,4 +1,4 @@
-package mg.telma.qoe.activity;
+package mg.telma.qoe.ui.activity;
 
 import android.os.Bundle;
 

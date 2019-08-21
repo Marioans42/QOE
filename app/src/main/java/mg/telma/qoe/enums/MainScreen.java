@@ -4,11 +4,12 @@ import androidx.fragment.app.Fragment;
 
 import mg.telma.qoe.R;
 import mg.telma.qoe.ui.fragment.InternetFragment;
+import mg.telma.qoe.ui.fragment.VideoFragment;
 
 public enum MainScreen {
 
     INTERNET(R.id.nav_internet, R.drawable.ic_internet, R.string.app_name, new InternetFragment()),
-    CALL(R.id.nav_call, R.drawable.ic_call, R.string.app_name, new InternetFragment());
+    CALL(R.id.nav_call, R.drawable.ic_call, R.string.app_name, new VideoFragment());
 
     private int menuItemId;
     private int menuItemIconId;

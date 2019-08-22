@@ -15,16 +15,19 @@ import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerFragment;
 import com.google.android.youtube.player.YouTubePlayerView;
 
+import java.text.DecimalFormat;
+
 import mg.telma.qoe.R;
 
 public class VideoFragment extends Fragment implements YouTubePlayer.OnInitializedListener {
     private static final String TAG = VideoFragment.class.getSimpleName();
     private static final String DEVELOPER_KEY = "AIzaSyBthnazm5XRmEj6jNCzyD8kLjGfWmvu_vc";
-    private static final String VIDEO_ID = "fDuPxGGt6zo";
+    private static final String VIDEO_ID = "W642mNtcs1Y";
     private static final int RECOVERY_DIALOG_REQUEST = 1;
     private YouTubePlayerFragment myYouTubePlayerFragment;
     private double startTime;
-    private double bufferingTime;
+    private double bufferingTotal;
+    final DecimalFormat dec = new DecimalFormat("#.##");
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,7 +45,6 @@ public class VideoFragment extends Fragment implements YouTubePlayer.OnInitializ
             //youTubePlayer.play();
             this.startTime = System.currentTimeMillis();
             youTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.CHROMELESS);
-
             youTubePlayer.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
                 @Override
                 public void onLoading() {
@@ -54,8 +56,8 @@ public class VideoFragment extends Fragment implements YouTubePlayer.OnInitializ
                 @Override
                 public void onLoaded(String s) {
                     double loaded = System.currentTimeMillis() - startTime ;
-                    Toast.makeText(getActivity(), "Loaded: " + loaded, Toast.LENGTH_LONG).show();
-                    Log.e(TAG, "Loaded: " + loaded);
+                    Toast.makeText(getActivity(), "Loaded: " + dec.format(loaded/1000), Toast.LENGTH_LONG).show();
+                    Log.e(TAG, "Loaded: " + dec.format(loaded/1000));
                 }
 
                 @Override
@@ -98,11 +100,10 @@ public class VideoFragment extends Fragment implements YouTubePlayer.OnInitializ
                 @Override
                 public void onBuffering(boolean b) {
                     if(!b) {
-                        double buffering = System.currentTimeMillis() - startTime ;
-                        Toast.makeText(getActivity(), "Buffering: " + buffering, Toast.LENGTH_LONG).show();
-                        Log.e(TAG, "Buffering: " + buffering);
+                        bufferingTotal =+ bufferingTotal + System.currentTimeMillis() - startTime ;
                     }
-
+                    Toast.makeText(getActivity(), "Buffering: " + dec.format(bufferingTotal/1000), Toast.LENGTH_LONG).show();
+                    Log.e(TAG, "Buffering: " + dec.format(bufferingTotal/1000));
                 }
 
                 @Override

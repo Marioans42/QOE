@@ -1,6 +1,5 @@
 package mg.telma.qoe.ui.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,21 +9,18 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
-import com.google.android.youtube.player.YouTubeInitializationResult;
-import com.google.android.youtube.player.YouTubePlayer;
-import com.google.android.youtube.player.YouTubePlayerFragment;
-import com.google.android.youtube.player.YouTubePlayerView;
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView;
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener;
 
 import java.text.DecimalFormat;
 
 import mg.telma.qoe.R;
 
-public class VideoFragment extends Fragment implements YouTubePlayer.OnInitializedListener {
+public class VideoFragment extends Fragment{
     private static final String TAG = VideoFragment.class.getSimpleName();
     private static final String DEVELOPER_KEY = "AIzaSyBthnazm5XRmEj6jNCzyD8kLjGfWmvu_vc";
-    private static final String VIDEO_ID = "W642mNtcs1Y";
+    private static final String VIDEO_ID = "F77dhX-YtDE";
     private static final int RECOVERY_DIALOG_REQUEST = 1;
-    private YouTubePlayerFragment myYouTubePlayerFragment;
     private double startTime;
     private double bufferingTotal;
     final DecimalFormat dec = new DecimalFormat("#.##");
@@ -32,111 +28,29 @@ public class VideoFragment extends Fragment implements YouTubePlayer.OnInitializ
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.fragment_video, container, false);
-        myYouTubePlayerFragment = (YouTubePlayerFragment) getActivity().getFragmentManager().findFragmentById(R.id.youtubeplayerfragment);
-        myYouTubePlayerFragment.initialize(DEVELOPER_KEY, this);
+        View view = inflater.inflate(R.layout.fragment_video, container, false);
+        YouTubePlayerView youTubePlayerView = view.findViewById(R.id.youtube_player_view);
+        getLifecycle().addObserver(youTubePlayerView);
+        youTubePlayerView.getPlayerUIController().showUI(false);
+        youTubePlayerView.getPlayerUIController().showVideoTitle(false);
+        youTubePlayerView.getPlayerUIController().showYouTubeButton(false);
+        youTubePlayerView.getPlayerUIController().showMenuButton(false);
+        youTubePlayerView.getPlayerUIController().showCustomAction1(false);
+        youTubePlayerView.getPlayerUIController().enableLiveVideoUI(false);
+        youTubePlayerView.initialize(initializedYouTubePlayer -> initializedYouTubePlayer.addListener(new AbstractYouTubePlayerListener() {
+            @Override
+            public void onReady() {
+                initializedYouTubePlayer.loadVideo(VIDEO_ID, 0);
+            }
+            @Override
+            public void onVideoLoadedFraction(float fraction) {
+                Log.e(TAG, "Buffuring" + fraction);
+                Toast.makeText(getActivity(),"Buffuring " + dec.format(fraction) + "%", Toast.LENGTH_SHORT).show();
+            }
+        }), true);
         return view;
     }
 
-    @Override
-    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-        if (!b) {
-            youTubePlayer.loadVideo(VIDEO_ID);
-            //youTubePlayer.play();
-            this.startTime = System.currentTimeMillis();
-            youTubePlayer.setPlayerStyle(YouTubePlayer.PlayerStyle.CHROMELESS);
-            youTubePlayer.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
-                @Override
-                public void onLoading() {
-                    /*double loading = System.currentTimeMillis() - startTime ;
-                    Toast.makeText(getActivity(), "loading: " + loading, Toast.LENGTH_LONG).show();
-                    Log.e(TAG, "loading: " + loading);*/
-                }
-
-                @Override
-                public void onLoaded(String s) {
-                    double loaded = System.currentTimeMillis() - startTime ;
-                    Toast.makeText(getActivity(), "Loaded: " + dec.format(loaded/1000), Toast.LENGTH_LONG).show();
-                    Log.e(TAG, "Loaded: " + dec.format(loaded/1000));
-                }
-
-                @Override
-                public void onAdStarted() {
-
-                }
-
-                @Override
-                public void onVideoStarted() {
-                    Toast.makeText(getActivity(), "Video Started", Toast.LENGTH_LONG).show();
-                }
-
-                @Override
-                public void onVideoEnded() {
-
-                }
-
-                @Override
-                public void onError(YouTubePlayer.ErrorReason errorReason) {
-
-                }
-            });
-
-            youTubePlayer.setPlaybackEventListener(new YouTubePlayer.PlaybackEventListener() {
-                @Override
-                public void onPlaying() {
-                    Toast.makeText(getActivity(), "Playing", Toast.LENGTH_LONG).show();
-                }
-
-                @Override
-                public void onPaused() {
-
-                }
-
-                @Override
-                public void onStopped() {
-
-                }
-
-                @Override
-                public void onBuffering(boolean b) {
-                    if(!b) {
-                        bufferingTotal =+ bufferingTotal + System.currentTimeMillis() - startTime ;
-                    }
-                    Toast.makeText(getActivity(), "Buffering: " + dec.format(bufferingTotal/1000), Toast.LENGTH_LONG).show();
-                    Log.e(TAG, "Buffering: " + dec.format(bufferingTotal/1000));
-                }
-
-                @Override
-                public void onSeekTo(int i) {
-                    Toast.makeText(getActivity(), "Seeking", Toast.LENGTH_LONG).show();
-                }
-            });
-
-        }
 
 
-    }
-
-    @Override
-    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-        if (youTubeInitializationResult.isUserRecoverableError()) {
-            youTubeInitializationResult.getErrorDialog(getActivity(), RECOVERY_DIALOG_REQUEST).show();
-        } else {
-            String errorMessage = String.format(
-                    "There was an error initializing the YouTubePlayer (%1$s)",
-                    youTubeInitializationResult.toString());
-            Toast.makeText(getActivity(), errorMessage, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RECOVERY_DIALOG_REQUEST) {
-            // Retry initialization if user performed a recovery action
-            getYouTubePlayerProvider().initialize(DEVELOPER_KEY, this);
-        }
-    }
-    private YouTubePlayer.Provider getYouTubePlayerProvider() {
-        return (YouTubePlayerView)getActivity().findViewById(R.id.youtubeplayerfragment);
-    }
 }

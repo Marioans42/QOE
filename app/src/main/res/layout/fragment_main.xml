@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/label_mcc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MCC" />
+
+            <TextView
+                android:id="@+id/mcc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+                android:paddingRight="10pt"
+                android:text="04" />
+
+            <TextView
+                android:id="@+id/label_mnc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+                android:paddingRight="10pt"
+                android:text="MNC" />
+
+            <TextView
+                android:id="@+id/mnc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+                android:paddingRight="10pt"
+                android:text="6460" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/laleb_cell_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+                android:paddingRight="10pt"
+                android:text="CELL ID" />
+
+            <TextView
+                android:id="@+id/cell_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+                android:paddingRight="10pt"
+                android:text="04" />
+
+            <TextView
+                android:id="@+id/label_lac"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+                android:paddingRight="10pt"
+                android:text="LAC" />
+
+            <TextView
+                android:id="@+id/lac"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+                android:paddingRight="10pt"
+                android:text="6460" />
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="10dp"
+            android:background="@color/cardview_shadow_start_color" />
+
+        <TextView
+            android:id="@+id/label_technologie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5pt"
+            android:text="Type technologie" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:paddingLeft="10dp">
+
+
+            <TextView
+                android:id="@+id/label_niv_signal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+                android:paddingRight="10pt"
+                android:text="Niveau du Signal" />
+
+            <TextView
+                android:id="@+id/niv_signal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+                android:paddingRight="10pt"
+                android:text="04" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:paddingLeft="10dp">
+
+
+            <TextView
+                android:id="@+id/label_qual_signal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+                android:paddingRight="10pt"
+                android:text="Qualité du Signal" />
+
+            <TextView
+                android:id="@+id/qualite_signal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+                android:paddingRight="10pt"
+                android:text="04" />
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="10dp"
+            android:background="@color/cardview_shadow_start_color" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+
+
+            <TextView
+                android:id="@+id/label_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DATA" />
+
+            <Switch
+                android:id="@+id/switch_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+
+                />
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="10dp"
+            android:background="@color/cardview_shadow_start_color" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+
+
+            <TextView
+                android:id="@+id/label_gps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dp"
+                android:text="GPS" />
+
+            <Switch
+                android:id="@+id/switch_gps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="left"
+            android:paddingLeft="10dp">
+
+
+            <TextView
+                android:id="@+id/label_longitude"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Longitude" />
+
+            <TextView
+                android:id="@+id/longitude"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+                android:paddingRight="10pt"
+                android:text="04" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:paddingLeft="10dp">
+
+
+            <TextView
+                android:id="@+id/label_latitude"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="5pt"
+                android:text="Latitude" />
+
+            <TextView
+                android:id="@+id/latitude"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+                android:paddingRight="10pt"
+                android:text="04" />
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="10dp"
+            android:background="@color/cardview_shadow_start_color" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="left"
+            android:paddingLeft="10dp">
+
+
+            <TextView
+                android:id="@+id/label_msisdn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="5pt"
+                android:text="MSISDN" />
+
+            <TextView
+                android:id="@+id/msisdn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+                android:paddingRight="10pt"
+                android:text="04" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="left"
+            android:paddingLeft="10dp">
+
+
+            <TextView
+                android:id="@+id/label_imsi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="5pt"
+                android:text="IMSI" />
+
+            <TextView
+                android:id="@+id/imsi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+                android:paddingRight="10pt"
+                android:text="04" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="left"
+            android:paddingLeft="10dp">
+
+
+            <TextView
+                android:id="@+id/label_imei"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="5pt"
+                android:text="IMEI" />
+
+            <TextView
+                android:id="@+id/imei"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10pt"
+                android:paddingRight="10pt"
+                android:text="04" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

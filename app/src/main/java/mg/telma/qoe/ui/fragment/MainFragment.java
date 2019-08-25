@@ -87,21 +87,23 @@ public class MainFragment extends Fragment {
         });
         getInfoCellular();
         getLocation();
+
+        if(wifi.isWifiEnabled()) {
+            dataSwitch.setChecked(true);
+        } else dataSwitch.setChecked(false);
+        
         return view;
     }
 
     public void getInfoCellular() {
 
-        if (ActivityCompat.checkSelfPermission(getActivity(),Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                    REQUEST_LOCATION);
+        if (ActivityCompat.checkSelfPermission(getActivity(),Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE},
+                    REQUEST_PHONE_STATE);
         } else {
             TelephonyManager telephonyManager = (TelephonyManager) getActivity().getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-            GsmCellLocation cellLocation = (GsmCellLocation) telephonyManager.getCellLocation();
             mcc.setText(telephonyManager.getNetworkOperator().substring(0, 3));
             mnc.setText(telephonyManager.getNetworkOperator().substring(3));
-            cellId.setText(String.valueOf(cellLocation.getCid()));
-            lac.setText(String.valueOf(cellLocation.getLac()));
             telephonyManager.listen(new PhoneStateListener() {
                 @Override
                 public void onSignalStrengthsChanged(SignalStrength signalStrength) {
@@ -119,37 +121,49 @@ public class MainFragment extends Fragment {
             }, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
 
             signalQuality.setText(Reseau.getNetworkClass(telephonyManager));
-        }
-
-
-
-       /*
             imei.setText(telephonyManager.getDeviceId());
-
-
-        imsi.setText(telephonyManager.getSubscriberId());*/
-
+            imsi.setText(telephonyManager.getSubscriberId());
+        }
     }
 
     public void getLocation() {
-        LocationService locationService = new LocationService(getContext());
-        locationService.getLocation();
-        longitude.setText(String.valueOf(locationService.getLongitude()));
-        latitude.setText(String.valueOf(locationService.getLatitude()));
+        if (ActivityCompat.checkSelfPermission(getActivity(),Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    REQUEST_LOCATION);
+        } else {
+            TelephonyManager telephonyManager = (TelephonyManager) getActivity().getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+            GsmCellLocation cellLocation = (GsmCellLocation) telephonyManager.getCellLocation();
+            LocationService locationService = new LocationService(getContext());
+            locationService.getLocation();
+            longitude.setText(String.valueOf(locationService.getLongitude()));
+            latitude.setText(String.valueOf(locationService.getLatitude()));
+            cellId.setText(String.valueOf(cellLocation.getCid()));
+            lac.setText(String.valueOf(cellLocation.getLac()));
+        }
     }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_LOCATION) {
-            if (permissions[0].equals(Manifest.permission.ACCESS_COARSE_LOCATION)
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (permissions[1].equals(Manifest.permission.ACCESS_COARSE_LOCATION)
+                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(getActivity(), "Permission accordée 1",
                         Toast.LENGTH_SHORT).show();
-                getInfoCellular();
                 getLocation();
             } else {
                 Toast.makeText(getActivity(), "Permission denied 1",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        if (requestCode == REQUEST_PHONE_STATE) {
+            if (permissions[1].equals(Manifest.permission.READ_PHONE_STATE)
+                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getActivity(), "Permission accordée 2",
+                        Toast.LENGTH_SHORT).show();
+                getInfoCellular();
+            } else {
+                Toast.makeText(getActivity(), "Permission denied 2",
                         Toast.LENGTH_SHORT).show();
             }
         }

@@ -66,8 +66,8 @@ public class MainFragment extends Fragment {
     TextView imei;
 
     private Unbinder unbinder;
-    private static final int REQUEST_LOCATION = 0;
-    private static final int REQUEST_PHONE_STATE = 1;
+    private static final int REQUEST_LOCATION = 1;
+    private static final int REQUEST_PHONE_STATE = 2;
     int signalStrengthValue ;
 
     @Override
@@ -87,11 +87,11 @@ public class MainFragment extends Fragment {
         });
 
 
-        if (dataSwitch.isChecked()) {
+   /*     if (dataSwitch.isChecked()) {
             wifi.setWifiEnabled(true);
         } else {
             wifi.setWifiEnabled(false);
-        }
+        }*/
         getInfoCellular();
         getLocation();
         return view;
@@ -99,15 +99,10 @@ public class MainFragment extends Fragment {
 
     public void getInfoCellular() {
 
-        if (ActivityCompat.checkSelfPermission(getActivity(),Manifest.permission.READ_PHONE_STATE)
-                != PackageManager.PERMISSION_GRANTED) {
-          /*  ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-                    REQUEST_LOCATION);*/
+        if (ActivityCompat.checkSelfPermission(getActivity(),Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(),Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.READ_PHONE_STATE},
-                    REQUEST_PHONE_STATE);
-
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    REQUEST_LOCATION);
             return;
         }
         TelephonyManager telephonyManager = (TelephonyManager) getActivity().getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
@@ -135,17 +130,17 @@ public class MainFragment extends Fragment {
         signalQuality.setText(Reseau.getNetworkClass(telephonyManager));
 
 
-       
+       /*
             imei.setText(telephonyManager.getDeviceId());
 
 
-        imsi.setText(telephonyManager.getSubscriberId());
+        imsi.setText(telephonyManager.getSubscriberId());*/
 
     }
 
     public void getLocation() {
         LocationService locationService = new LocationService(getContext());
-        locationService.getLocation(getActivity());
+        locationService.getLocation();
         longitude.setText(String.valueOf(locationService.getLongitude()));
         latitude.setText(String.valueOf(locationService.getLatitude()));
     }

@@ -40,12 +40,12 @@ public class VideoFragment extends Fragment{
         youTubePlayerView.initialize(initializedYouTubePlayer -> initializedYouTubePlayer.addListener(new AbstractYouTubePlayerListener() {
             @Override
             public void onReady() {
-                initializedYouTubePlayer.loadVideo(VIDEO_ID, 0);
+                //initializedYouTubePlayer.loadVideo(VIDEO_ID, 0);
             }
             @Override
             public void onVideoLoadedFraction(float fraction) {
-                Log.e(TAG, "Buffuring" + fraction);
-                Toast.makeText(getActivity(),"Buffuring " + dec.format(fraction) + "%", Toast.LENGTH_SHORT).show();
+               /* Log.e(TAG, "Buffuring" + fraction);
+                Toast.makeText(getActivity(),"Buffuring " + dec.format(fraction) + "%", Toast.LENGTH_SHORT).show();*/
             }
         }), true);
         return view;

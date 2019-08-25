@@ -9,9 +9,10 @@ import mg.telma.qoe.ui.fragment.VideoFragment;
 
 public enum MainScreen {
 
-    INTERNET(R.id.nav_internet, R.drawable.ic_internet, R.string.app_name, new InternetFragment()),
-    MAIN(R.id.nav_video, R.drawable.ic_internet, R.string.app_name, new MainFragment()),
-    CALL(R.id.nav_call, R.drawable.ic_call, R.string.app_name, new VideoFragment());
+
+    MAIN(R.id.nav_home, R.drawable.ic_home_black_24dp, R.string.activity_main_cell, new MainFragment()),
+    INTERNET(R.id.nav_internet, R.drawable.ic_network_check_black_24dp, R.string.activity_main_internet, new InternetFragment()),
+    VIDEO(R.id.nav_video, R.drawable.ic_video_library_black_24dp, R.string.activity_main_video, new VideoFragment());
 
 
     private int menuItemId;

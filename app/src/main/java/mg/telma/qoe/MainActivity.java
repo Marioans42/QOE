@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -31,15 +32,19 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(mainPagerAdapter);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         List<MainScreen> screens = new ArrayList<>();
-        screens.add(MainScreen.INTERNET);
-        screens.add(MainScreen.CALL);
         screens.add(MainScreen.MAIN);
+        screens.add(MainScreen.INTERNET);
+        screens.add(MainScreen.VIDEO);
+
 
         mainPagerAdapter.setItems(screens);
 
-        MainScreen defaultScreen = MainScreen.INTERNET;
+        MainScreen defaultScreen = MainScreen.MAIN;
+        getSupportActionBar().setTitle(defaultScreen.getTitleStringId());
 
 
 
@@ -50,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             public void onPageSelected(int position) {
                 MainScreen mainScreen = mainPagerAdapter.getItems().get(position);
                 selectBottomNavigationViewMenuItem(mainScreen.getMenuItemId());
+                getSupportActionBar().setTitle(mainScreen.getTitleStringId());
             }
         });
     }
@@ -61,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         MainScreen screen = MainScreen.getMainScreenForMenuItem(menuItem.getItemId());
         if(screen != null) {
             scrollToScreen(screen);
+            getSupportActionBar().setTitle(screen.getTitleStringId());
             return true;
         }
         return false;

@@ -85,13 +85,6 @@ public class MainFragment extends Fragment {
             }
 
         });
-
-
-   /*     if (dataSwitch.isChecked()) {
-            wifi.setWifiEnabled(true);
-        } else {
-            wifi.setWifiEnabled(false);
-        }*/
         getInfoCellular();
         getLocation();
         return view;
@@ -99,35 +92,35 @@ public class MainFragment extends Fragment {
 
     public void getInfoCellular() {
 
-        if (ActivityCompat.checkSelfPermission(getActivity(),Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(),Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+        if (ActivityCompat.checkSelfPermission(getActivity(),Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
                     REQUEST_LOCATION);
-            return;
-        }
-        TelephonyManager telephonyManager = (TelephonyManager) getActivity().getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-        GsmCellLocation cellLocation = (GsmCellLocation) telephonyManager.getCellLocation();
-        mcc.setText(telephonyManager.getNetworkOperator().substring(0, 3));
-        mnc.setText(telephonyManager.getNetworkOperator().substring(3));
-        cellId.setText(String.valueOf(cellLocation.getCid()));
-        lac.setText(String.valueOf(cellLocation.getLac()));
-        telephonyManager.listen(new PhoneStateListener() {
-            @Override
-            public void onSignalStrengthsChanged(SignalStrength signalStrength) {
-                super.onSignalStrengthsChanged(signalStrength);
-                if (signalStrength.isGsm()) {
-                    if (signalStrength.getGsmSignalStrength() != 99)
-                        signalStrengthValue = signalStrength.getGsmSignalStrength() * 2 - 113;
-                    else
-                        signalStrengthValue = signalStrength.getGsmSignalStrength();
-                } else {
-                    signalStrengthValue = signalStrength.getCdmaDbm();
+        } else {
+            TelephonyManager telephonyManager = (TelephonyManager) getActivity().getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+            GsmCellLocation cellLocation = (GsmCellLocation) telephonyManager.getCellLocation();
+            mcc.setText(telephonyManager.getNetworkOperator().substring(0, 3));
+            mnc.setText(telephonyManager.getNetworkOperator().substring(3));
+            cellId.setText(String.valueOf(cellLocation.getCid()));
+            lac.setText(String.valueOf(cellLocation.getLac()));
+            telephonyManager.listen(new PhoneStateListener() {
+                @Override
+                public void onSignalStrengthsChanged(SignalStrength signalStrength) {
+                    super.onSignalStrengthsChanged(signalStrength);
+                    if (signalStrength.isGsm()) {
+                        if (signalStrength.getGsmSignalStrength() != 99)
+                            signalStrengthValue = signalStrength.getGsmSignalStrength() * 2 - 113;
+                        else
+                            signalStrengthValue = signalStrength.getGsmSignalStrength();
+                    } else {
+                        signalStrengthValue = signalStrength.getCdmaDbm();
+                    }
+                    signalLvl.setText(String.valueOf(signalStrengthValue));
                 }
-                signalLvl.setText(String.valueOf(signalStrengthValue));
-            }
-        }, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
+            }, PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
 
-        signalQuality.setText(Reseau.getNetworkClass(telephonyManager));
+            signalQuality.setText(Reseau.getNetworkClass(telephonyManager));
+        }
+
 
 
        /*
@@ -148,25 +141,17 @@ public class MainFragment extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_LOCATION:
-                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(getActivity(), "Permission Granted",
-                            Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getActivity(), "Permission denied",
-                            Toast.LENGTH_SHORT).show();
-
-                }
-            case REQUEST_PHONE_STATE:
-                if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(getActivity(), "Permission Granted",
-                            Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getActivity(), "Permission denied",
-                            Toast.LENGTH_SHORT).show();
-
-                }
+        if (requestCode == REQUEST_LOCATION) {
+            if (permissions[0].equals(Manifest.permission.ACCESS_COARSE_LOCATION)
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getActivity(), "Permission accordée 1",
+                        Toast.LENGTH_SHORT).show();
+                getInfoCellular();
+                getLocation();
+            } else {
+                Toast.makeText(getActivity(), "Permission denied 1",
+                        Toast.LENGTH_SHORT).show();
+            }
         }
 
 

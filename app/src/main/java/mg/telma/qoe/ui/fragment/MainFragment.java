@@ -2,10 +2,9 @@ package mg.telma.qoe.ui.fragment;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
@@ -16,10 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import butterknife.BindView;
@@ -27,6 +24,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import mg.telma.qoe.R;
 import mg.telma.qoe.service.LocationService;
+import mg.telma.qoe.utils.Permissions;
 import mg.telma.qoe.utils.Reseau;
 
 
@@ -66,14 +64,21 @@ public class MainFragment extends Fragment {
     TextView imei;
 
     private Unbinder unbinder;
-    private static final int REQUEST_LOCATION = 1;
-    private static final int REQUEST_PHONE_STATE = 2;
+    private static final int REQUEST = 124;
     int signalStrengthValue ;
+    boolean ispermissionChecked;
+
+    public static final String[] PERMISSIONS = new String[]{
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
+        Permissions.permitted(this, PERMISSIONS, REQUEST);
         unbinder = ButterKnife.bind(this, view);
         WifiManager wifi = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         Switch dataSwitch = view.findViewById(R.id.switch_data);
@@ -85,22 +90,21 @@ public class MainFragment extends Fragment {
             }
 
         });
-        getInfoCellular();
-        getLocation();
-
         if(wifi.isWifiEnabled()) {
             dataSwitch.setChecked(true);
         } else dataSwitch.setChecked(false);
-        
+
+        if(ispermissionChecked){
+            getInfoCellular();
+            getLocation();
+        }
+
         return view;
     }
 
+    @SuppressLint("MissingPermission")
     public void getInfoCellular() {
 
-        if (ActivityCompat.checkSelfPermission(getActivity(),Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE},
-                    REQUEST_PHONE_STATE);
-        } else {
             TelephonyManager telephonyManager = (TelephonyManager) getActivity().getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
             mcc.setText(telephonyManager.getNetworkOperator().substring(0, 3));
             mnc.setText(telephonyManager.getNetworkOperator().substring(3));
@@ -123,56 +127,31 @@ public class MainFragment extends Fragment {
             signalQuality.setText(Reseau.getNetworkClass(telephonyManager));
             imei.setText(telephonyManager.getDeviceId());
             imsi.setText(telephonyManager.getSubscriberId());
-        }
+
     }
 
     public void getLocation() {
-        if (ActivityCompat.checkSelfPermission(getActivity(),Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                    REQUEST_LOCATION);
-        } else {
+
             TelephonyManager telephonyManager = (TelephonyManager) getActivity().getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
-            GsmCellLocation cellLocation = (GsmCellLocation) telephonyManager.getCellLocation();
+            @SuppressLint("MissingPermission") GsmCellLocation cellLocation = (GsmCellLocation) telephonyManager.getCellLocation();
             LocationService locationService = new LocationService(getContext());
             locationService.getLocation();
             longitude.setText(String.valueOf(locationService.getLongitude()));
             latitude.setText(String.valueOf(locationService.getLatitude()));
             cellId.setText(String.valueOf(cellLocation.getCid()));
             lac.setText(String.valueOf(cellLocation.getLac()));
-        }
+
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_LOCATION) {
-            if (permissions[1].equals(Manifest.permission.ACCESS_COARSE_LOCATION)
-                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(getActivity(), "Permission accordée 1",
-                        Toast.LENGTH_SHORT).show();
-                getLocation();
-            } else {
-                Toast.makeText(getActivity(), "Permission denied 1",
-                        Toast.LENGTH_SHORT).show();
-            }
+        if (requestCode == REQUEST) {
+            getInfoCellular();
+            getLocation();
+            ispermissionChecked = true;
         }
-
-        if (requestCode == REQUEST_PHONE_STATE) {
-            if (permissions[1].equals(Manifest.permission.READ_PHONE_STATE)
-                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(getActivity(), "Permission accordée 2",
-                        Toast.LENGTH_SHORT).show();
-                getInfoCellular();
-            } else {
-                Toast.makeText(getActivity(), "Permission denied 2",
-                        Toast.LENGTH_SHORT).show();
-            }
-        }
-
 
     }
 
-    @Override public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
+
 }

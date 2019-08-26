@@ -1,9 +1,10 @@
 package mg.telma.qoe.ui.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.graphics.PorterDuff.Mode;
 import android.os.Handler;
 import android.widget.ProgressBar;
-import android.graphics.PorterDuff.Mode;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,21 +18,21 @@ public class SplashScreenActivity extends AppCompatActivity {
     private Intent mMainPagerIntent;
     private ProgressBar mSpinner;
     private static final long SPLASHTIME = 2000;
+    private static final int RESULT_CALL = 1;
+
 
     @Override
     protected void onStart() {
         super.onStart();
         setContentView(R.layout.activity_splash);
-
-        splashRunnable = new Runnable() {
-            @Override
-            public void run() {
+            splashRunnable = () -> {
                 SplashScreenActivity splashScreenActivity = SplashScreenActivity.this;
                 splashScreenActivity.mMainPagerIntent = new Intent(splashScreenActivity, MainActivity.class);
                 splashScreenActivity.startActivityForResult(mMainPagerIntent, 1);
                 SplashScreenActivity.this.finish();
-            }
-        };
+
+            };
+
 
         this.mSpinner = findViewById(R.id.progressBar);
         this.mSpinner.setIndeterminate(true);

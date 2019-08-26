@@ -78,7 +78,7 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        Permissions.permitted(this, PERMISSIONS, REQUEST);
+
         unbinder = ButterKnife.bind(this, view);
         WifiManager wifi = (WifiManager) getActivity().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         Switch dataSwitch = view.findViewById(R.id.switch_data);
@@ -94,7 +94,7 @@ public class MainFragment extends Fragment {
             dataSwitch.setChecked(true);
         } else dataSwitch.setChecked(false);
 
-        if(ispermissionChecked){
+        if(Permissions.permitted(this, PERMISSIONS, REQUEST)){
             getInfoCellular();
             getLocation();
         }
@@ -148,7 +148,6 @@ public class MainFragment extends Fragment {
         if (requestCode == REQUEST) {
             getInfoCellular();
             getLocation();
-            ispermissionChecked = true;
         }
 
     }

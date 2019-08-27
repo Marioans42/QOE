@@ -27,16 +27,15 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.github.axet.androidlibrary.app.ProximityShader;
-import com.github.axet.androidlibrary.app.Storage;
 import com.github.axet.androidlibrary.services.PersistentService;
 import com.github.axet.androidlibrary.widgets.ErrorDialog;
 import com.github.axet.androidlibrary.widgets.OptimizationPreferenceCompat;
 import com.github.axet.androidlibrary.widgets.RemoteNotificationCompat;
+import com.github.axet.androidlibrary.widgets.Toast;
 import com.github.axet.audiolibrary.app.RawSamples;
 import com.github.axet.audiolibrary.app.Sound;
 import com.github.axet.audiolibrary.encoders.Factory;
@@ -56,11 +55,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import mg.telma.qoe.MainActivity;
+
+import mg.telma.qoe.R;
+import mg.telma.qoe.app.CallApplication;
+import mg.telma.qoe.ui.activity.CellularActivity;
+import mg.telma.qoe.ui.activity.RecentCallActivity;
+import mg.telma.qoe.utils.Storage;
 
 public class CallTestService extends PersistentService implements SharedPreferences.OnSharedPreferenceChangeListener {
     public static final int NOTIFICATION_PERSISTENT_ICON = 1;
-    public static final int RETRY_DELAY = 60 * AlarmManager.; // 1 min
+    public static final int RETRY_DELAY = 60 * 1000; // 1 min
 
     public static String SHOW_ACTIVITY = CallTestService.class.getCanonicalName() + ".SHOW_ACTIVITY";
     public static String PAUSE_BUTTON = CallTestService.class.getCanonicalName() + ".PAUSE_BUTTON";
@@ -106,13 +110,13 @@ public class CallTestService extends PersistentService implements SharedPreferen
 
 
     public static void start(Context context) {
-        start(context, new Intent(context, RecordingService.class));
+        start(context, new Intent(context, CallTestService.class));
     }
 
     public static boolean isEnabled(Context context) {
         final SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(context);
         boolean b = shared.getBoolean(CallApplication.PREFERENCE_CALL, false);
-        if (!Storage.permitted(context, MainActivity.MUST))
+        if (!Storage.permitted(context, CellularActivity.MUST))
             b = false;
         return b;
     }
@@ -123,7 +127,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
     }
 
     public static void stop(Context context) {
-        stop(context, new Intent(context, RecordingService.class));
+        stop(context, new Intent(context, CallTestService.class));
     }
 
     public static void pauseButton(Context context) {
@@ -155,6 +159,20 @@ public class CallTestService extends PersistentService implements SharedPreferen
 
     public interface Success {
         void run(Uri u);
+    }
+
+    public static void setEnabled(Context context, boolean b) {
+        final SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor edit = shared.edit();
+        edit.putBoolean(CallApplication.PREFERENCE_CALL, b);
+        edit.commit();
+        if (b) {
+            CallTestService.start(context);
+            com.github.axet.androidlibrary.widgets.Toast.makeText(context, R.string.recording_enabled, com.github.axet.androidlibrary.widgets.Toast.LENGTH_SHORT).show();
+        } else {
+            CallTestService.stop(context);
+            com.github.axet.androidlibrary.widgets.Toast.makeText(context, R.string.recording_disabled, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public static class CallInfo {
@@ -206,7 +224,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
                 if (a.equals(STOP_BUTTON))
                     finish();
             } catch (RuntimeException e) {
-                Error(RecordingService.this, e);
+                Error(CallTestService.this, e);
             }
         }
     }
@@ -291,12 +309,12 @@ public class CallTestService extends PersistentService implements SharedPreferen
                         break;
                 }
             } catch (RuntimeException e) {
-                Error(RecordingService.this, e);
+                Error(CallTestService.this, e);
             }
         }
     }
 
-    public RecordingService() {
+    public CallTestService() {
     }
 
     public void setPhone(String s, String c) {
@@ -307,7 +325,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
 
         contact = "";
         contactId = "";
-        if (Storage.permitted(this, SettingsActivity.CONTACTS)) {
+       /* if (Storage.permitted(this, SettingsActivity.CONTACTS)) {
             Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(s));
             try {
                 ContentResolver contentResolver = getContentResolver();
@@ -323,9 +341,9 @@ public class CallTestService extends PersistentService implements SharedPreferen
                     }
                 }
             } catch (RuntimeException e) {
-                Error(RecordingService.this, e);
+                Error(CallTestService.this, e);
             }
-        }
+        }*/
 
         call = c;
     }
@@ -339,7 +357,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
 
         storage = new Storage(this);
 
-        deleteOld();
+        //deleteOld();
 
         pscl = new PhoneStateChangeListener();
         pscl.register();
@@ -355,11 +373,11 @@ public class CallTestService extends PersistentService implements SharedPreferen
         try {
             encodingNext();
         } catch (RuntimeException e) {
-            Error(RecordingService.this, e);
+            Error(CallTestService.this, e);
         }
     }
 
-    @Override
+   /* @Override
     public void onCreateOptimization() {
         optimization = new OptimizationPreferenceCompat.ServiceReceiver(this, NOTIFICATION_PERSISTENT_ICON, CallApplication.PREFERENCE_OPTIMIZATION, CallApplication.PREFERENCE_NEXT) {
             @Override
@@ -371,9 +389,9 @@ public class CallTestService extends PersistentService implements SharedPreferen
             }
         };
         optimization.create();
-    }
+    }*/
 
-    void deleteOld() {
+    /*void deleteOld() {
         SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
         String d = shared.getString(CallApplication.PREFERENCE_DELETE, getString(R.string.delete_off));
         if (d.equals(getString(R.string.delete_off)))
@@ -429,7 +447,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
         } catch (RuntimeException e) {
             Log.d(TAG, "unable to delete old", e); // hide all deleteOld IO errors
         }
-    }
+    }*/
 
     @Override
     public void onStartCommand(Intent intent) {
@@ -442,7 +460,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
             stopButton(this);
         } else if (a.equals(SHOW_ACTIVITY)) {
             ProximityShader.closeSystemDialogs(this);
-            MainActivity.startActivity(this);
+            CellularActivity.startActivity(this);
         }
     }
 
@@ -504,16 +522,16 @@ public class CallTestService extends PersistentService implements SharedPreferen
         }
     }
 
-    @SuppressLint("RestrictedApi")
+    /*@SuppressLint("RestrictedApi")
     public Notification buildNotification(Notification when) {
         boolean recording = thread != null;
 
         PendingIntent main = PendingIntent.getService(this, 0,
-                new Intent(this, RecordingService.class).setAction(SHOW_ACTIVITY),
+                new Intent(this, CallTestService.class).setAction(SHOW_ACTIVITY),
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         PendingIntent pe = PendingIntent.getService(this, 0,
-                new Intent(this, RecordingService.class).setAction(STOP_BUTTON),
+                new Intent(this, CallTestService.class).setAction(STOP_BUTTON),
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         RemoteNotificationCompat.Builder builder = new RemoteNotificationCompat.Builder(this, R.layout.notifictaion);
@@ -546,11 +564,11 @@ public class CallTestService extends PersistentService implements SharedPreferen
                 .setSmallIcon(R.drawable.ic_launcher_notification_call);
 
         return builder.build();
-    }
+    }*/
 
     @SuppressLint("RestrictedApi")
-    public Notification buildPersistent(Notification when) {
-        PendingIntent main = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+    /*public Notification buildPersistent(Notification when) {
+        PendingIntent main = PendingIntent.getActivity(this, 0, new Intent(this, CellularActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
         RemoteNotificationCompat.Builder builder = new RemoteNotificationCompat.Low(this, R.layout.notifictaion);
 
@@ -569,11 +587,11 @@ public class CallTestService extends PersistentService implements SharedPreferen
                 .setSmallIcon(R.drawable.ic_launcher_notification_service);
 
         return builder.build();
-    }
+    }*/
 
     public void updateIcon(boolean show) {
         boolean recording = thread != null;
-        MainActivity.showProgress(RecordingService.this, show, phone, samplesTime / sampleRate, recording);
+        CellularActivity.showProgress(CallTestService.this, show, phone, samplesTime / sampleRate, recording);
         optimization.icon.updateIcon(show ? new Intent() : null);
     }
 
@@ -645,15 +663,14 @@ public class CallTestService extends PersistentService implements SharedPreferen
                 }
 
                 PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-                PowerManager.WakeLock wlcpu = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, BuildConfig.APPLICATION_ID + ":cpulock");
-                wlcpu.acquire();
+
 
                 android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_AUDIO);
 
                 Runnable done = new Runnable() {
                     @Override
                     public void run() {
-                        deleteOld();
+                        //deleteOld();
                         stopRecording();
                         updateIcon(false);
                     }
@@ -662,14 +679,14 @@ public class CallTestService extends PersistentService implements SharedPreferen
                 Runnable save = new Runnable() {
                     @Override
                     public void run() {
-                        final SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(RecordingService.this);
+                        final SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(CallTestService.this);
                         SharedPreferences.Editor edit = shared.edit();
-                        edit.putString(CallApplication.PREFERENCE_LAST, Storage.getName(RecordingService.this, fly.targetUri));
+                        edit.putString(CallApplication.PREFERENCE_LAST, Storage.getName(CallTestService.this, fly.targetUri));
                         edit.commit();
 
-                        CallApplication.setContact(RecordingService.this, info.targetUri, info.contactId);
-                        CallApplication.setCall(RecordingService.this, info.targetUri, info.call);
-                        MainActivity.last(RecordingService.this);
+                        CallApplication.setContact(CallTestService.this, info.targetUri, info.contactId);
+                        CallApplication.setCall(CallTestService.this, info.targetUri, info.call);
+                        CellularActivity.last(CallTestService.this);
                         showDone(info.targetUri);
                     }
                 };
@@ -682,7 +699,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
                     // how many samples we need to update 'samples'. time clock. every 1000ms.
                     int samplesTimeUpdate = 1000 * sampleRate / 1000;
 
-                    short[] buffer = new short[100 * sampleRate / 1000 * Sound.getChannels(RecordingService.this)];
+                    short[] buffer = new short[100 * sampleRate / 1000 * Sound.getChannels(CallTestService.this)];
 
                     boolean stableRefresh = false;
 
@@ -697,7 +714,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
 
                         start = end;
 
-                        int samples = readSize / Sound.getChannels(RecordingService.this);
+                        int samples = readSize / Sound.getChannels(CallTestService.this);
 
                         if (stableRefresh || diff >= samples) {
                             stableRefresh = true;
@@ -708,16 +725,15 @@ public class CallTestService extends PersistentService implements SharedPreferen
                             samplesTimeCount += samples;
                             if (samplesTimeCount > samplesTimeUpdate) {
                                 samplesTimeCount -= samplesTimeUpdate;
-                                MainActivity.showProgress(RecordingService.this, true, phone, samplesTime / sampleRate, true);
+                                CellularActivity.showProgress(CallTestService.this, true, phone, samplesTime / sampleRate, true);
                             }
                         }
                     }
                 } catch (final RuntimeException e) {
-                    Storage.delete(RecordingService.this, fly.targetUri);
-                    Post(RecordingService.this, e);
+                    Storage.delete(CallTestService.this, fly.targetUri);
+                    Post(CallTestService.this, e);
                     return; // no save
                 } finally {
-                    wlcpu.release();
 
                     handle.post(done);
 
@@ -728,8 +744,8 @@ public class CallTestService extends PersistentService implements SharedPreferen
                         try {
                             fly.close();
                         } catch (RuntimeException e) {
-                            Storage.delete(RecordingService.this, fly.targetUri);
-                            Post(RecordingService.this, e);
+                            Storage.delete(CallTestService.this, fly.targetUri);
+                            Post(CallTestService.this, e);
                             return; // no save
                         }
                     }
@@ -833,7 +849,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
                     Runnable done = new Runnable() {
                         @Override
                         public void run() {
-                            deleteOld();
+                            //deleteOld();
                             stopRecording();
                             updateIcon(false);
                         }
@@ -842,21 +858,20 @@ public class CallTestService extends PersistentService implements SharedPreferen
                     Runnable save = new Runnable() {
                         @Override
                         public void run() {
-                            final SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(RecordingService.this);
+                            final SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(CallTestService.this);
                             SharedPreferences.Editor edit = shared.edit();
-                            edit.putString(CallApplication.PREFERENCE_LAST, Storage.getName(RecordingService.this, info.targetUri));
+                            edit.putString(CallApplication.PREFERENCE_LAST, Storage.getName(CallTestService.this, info.targetUri));
                             edit.commit();
 
-                            CallApplication.setContact(RecordingService.this, info.targetUri, info.contactId);
-                            CallApplication.setCall(RecordingService.this, info.targetUri, info.call);
-                            MainActivity.last(RecordingService.this);
+                            CallApplication.setContact(CallTestService.this, info.targetUri, info.contactId);
+                            CallApplication.setCall(CallTestService.this, info.targetUri, info.call);
+                            CellularActivity.last(CallTestService.this);
                             showDone(info.targetUri);
                         }
                     };
 
                     PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-                    PowerManager.WakeLock wlcpu = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, BuildConfig.APPLICATION_ID + ":cpulock");
-                    wlcpu.acquire();
+
 
                     boolean start = false;
                     try {
@@ -866,23 +881,22 @@ public class CallTestService extends PersistentService implements SharedPreferen
                         while (!interrupt.get()) {
                             Thread.sleep(1000);
                             samplesTime += 1000 * sampleRate / 1000; // per 1 second
-                            MainActivity.showProgress(RecordingService.this, true, phone, samplesTime / sampleRate, true);
+                            CellularActivity.showProgress(CallTestService.this, true, phone, samplesTime / sampleRate, true);
                         }
                     } catch (RuntimeException e) {
-                        Storage.delete(RecordingService.this, info.targetUri);
-                        Post(RecordingService.this, e);
+                        Storage.delete(CallTestService.this, info.targetUri);
+                        Post(CallTestService.this, e);
                         return; // no save
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                     } finally {
-                        wlcpu.release();
                         handle.post(done);
                         if (start) {
                             try {
                                 recorder.stop();
                             } catch (RuntimeException e) { // https://stackoverflow.com/questions/16221866
-                                Storage.delete(RecordingService.this, info.targetUri);
-                                Post(RecordingService.this, e);
+                                Storage.delete(CallTestService.this, info.targetUri);
+                                Post(CallTestService.this, e);
                             }
                         }
                         recorder.release();
@@ -903,7 +917,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
     void encoding(final File in, final Uri uri, final Runnable done, final Success success) {
         final OnFlyEncoding fly = new OnFlyEncoding(storage, uri, getInfo());
 
-        final SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(RecordingService.this);
+        final SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(CallTestService.this);
 
         encoder = new FileEncoder(this, in, fly);
 
@@ -920,10 +934,10 @@ public class CallTestService extends PersistentService implements SharedPreferen
             public void run() {
                 Storage.delete(in); // delete raw recording
 
-                MainActivity.showProgress(RecordingService.this, false, phone, samplesTime / sampleRate, false);
+                CellularActivity.showProgress(CallTestService.this, false, phone, samplesTime / sampleRate, false);
 
                 SharedPreferences.Editor edit = shared.edit();
-                edit.putString(CallApplication.PREFERENCE_LAST, Storage.getName(RecordingService.this, fly.targetUri));
+                edit.putString(CallApplication.PREFERENCE_LAST, Storage.getName(CallTestService.this, fly.targetUri));
                 edit.commit();
 
                 success.run(fly.targetUri);
@@ -935,7 +949,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
         encoder.run(new Runnable() {
             @Override
             public void run() {  // progress
-                MainActivity.setProgress(RecordingService.this, encoder.getProgress());
+                CellularActivity.setProgress(CallTestService.this, encoder.getProgress());
             }
         }, new Runnable() {
             @Override
@@ -945,9 +959,9 @@ public class CallTestService extends PersistentService implements SharedPreferen
         }, new Runnable() {
             @Override
             public void run() { // error
-                Storage.delete(RecordingService.this, fly.targetUri);
-                MainActivity.showProgress(RecordingService.this, false, phone, samplesTime / sampleRate, false);
-                Error(RecordingService.this, encoder.getException());
+                Storage.delete(CallTestService.this, fly.targetUri);
+                CellularActivity.showProgress(CallTestService.this, false, phone, samplesTime / sampleRate, false);
+                Error(CallTestService.this, encoder.getException());
                 done.run();
                 handle.removeCallbacks(encodingNext);
                 handle.postDelayed(encodingNext, RETRY_DELAY);
@@ -960,7 +974,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
             stopRecording();
         else
             startRecording();
-        MainActivity.showProgress(this, true, phone, samplesTime / sampleRate, thread != null);
+        CellularActivity.showProgress(this, true, phone, samplesTime / sampleRate, thread != null);
     }
 
     void stopRecording() {
@@ -1002,7 +1016,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
             else
                 encoder.resume();
         } else { // if encoding failed, we will get no output file, hide notifications
-            deleteOld();
+            //deleteOld();
             updateIcon(false);
         }
     }
@@ -1032,11 +1046,11 @@ public class CallTestService extends PersistentService implements SharedPreferen
         targetUri = c.targetUri; // update notification encoding name
         final String contactId = c.contactId;
         final String call = c.call;
-        final Uri targetUri = RecordingService.this.targetUri;
+        final Uri targetUri = CallTestService.this.targetUri;
         encoding = new Runnable() { //  allways called when done
             @Override
             public void run() {
-                deleteOld();
+                //deleteOld();
                 updateIcon(false);
                 encoding = null;
                 encoder = null;
@@ -1048,9 +1062,9 @@ public class CallTestService extends PersistentService implements SharedPreferen
             @Override
             public void run(Uri t) { // called on success
                 mapTarget.remove(inFile);
-                CallApplication.setContact(RecordingService.this, t, contactId);
-                CallApplication.setCall(RecordingService.this, t, call);
-                MainActivity.last(RecordingService.this);
+                CallApplication.setContact(CallTestService.this, t, contactId);
+                CallApplication.setCall(CallTestService.this, t, call);
+                CellularActivity.last(CallTestService.this);
                 showDone(t);
             }
         });
@@ -1059,7 +1073,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(CallApplication.PREFERENCE_DELETE))
-            deleteOld();
+            //deleteOld();
         if (key.equals(CallApplication.PREFERENCE_STORAGE))
             encodingNext();
     }

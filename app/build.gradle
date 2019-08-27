@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'realm-android'
-
+apply plugin: 'com.github.axet.dxplugin'
 
 android {
     compileSdkVersion 28
@@ -23,7 +23,26 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            output.outputFileName = org.apache.commons.io.FilenameUtils.getExtension(android.defaultConfig.applicationId) + "-" + (output.getFilter(com.android.build.OutputFile.ABI) ?: "universal") + "-" + android.defaultConfig.versionName + "-" + variant.buildType.name + ".apk"
+        }
+    }
+    bundle {
+        abi {
+            enableSplit = true
+        }
+    }
+    splits {
+        abi {
+            enable false
+            universalApk true
+        }
+    }
 }
+
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])

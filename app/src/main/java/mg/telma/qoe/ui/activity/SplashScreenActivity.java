@@ -1,6 +1,5 @@
 package mg.telma.qoe.ui.activity;
 
-import android.Manifest;
 import android.content.Intent;
 import android.graphics.PorterDuff.Mode;
 import android.os.Handler;
@@ -8,7 +7,6 @@ import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import mg.telma.qoe.MainActivity;
 import mg.telma.qoe.R;
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -27,7 +25,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
             splashRunnable = () -> {
                 SplashScreenActivity splashScreenActivity = SplashScreenActivity.this;
-                splashScreenActivity.mMainPagerIntent = new Intent(splashScreenActivity, MainActivity.class);
+                splashScreenActivity.mMainPagerIntent = new Intent(splashScreenActivity, CellularActivity.class);
                 splashScreenActivity.startActivityForResult(mMainPagerIntent, 1);
                 SplashScreenActivity.this.finish();
 

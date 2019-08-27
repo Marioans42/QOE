@@ -60,16 +60,37 @@ package="mg.telma.qoe">
             <category android:name="android.intent.category.ALTERNATIVE" />
         </intent-filter>
     </activity>
-
-    <receiver android:name=".Receiver.PhoneReceiver">
+    <service android:name=".service.CallTestService"/>
+    <service
+        android:name=".utils.TileService"
+        android:icon="@drawable/ic_call_black_24dp"
+        android:label="@string/recording_enabled"
+        android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
         <intent-filter>
-            <action android:name="android.intent.action.PHONE_STATE"/>
-            <action android:name="android.intent.action.NEW_OUTGOING_CALL"/>
+            <action android:name="android.service.quicksettings.action.QS_TILE" />
+        </intent-filter>
+    </service>
+    <receiver android:name=".Receiver.OnBootReceiver">
+        <intent-filter>
+            <action android:name="android.intent.action.BOOT_COMPLETED" />
+            <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+        </intent-filter>
+    </receiver>
+    <receiver android:name=".Receiver.OnUpgradeReceiver">
+        <intent-filter>
+            <action android:name="android.intent.action.PACKAGE_REPLACED" />
+
+            <data android:scheme="package" />
+        </intent-filter>
+    </receiver>
+    <receiver android:name=".Receiver.OnExternalReceiver">
+        <intent-filter>
+            <action android:name="android.intent.action.EXTERNAL_APPLICATIONS_AVAILABLE" />
         </intent-filter>
     </receiver>
 
-    <service android:name=".service.CallTestService"/>
-    <service android:name=".service.LocationService"/>
+
 </application>
 
 </manifest>

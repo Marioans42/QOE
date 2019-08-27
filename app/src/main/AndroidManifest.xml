@@ -10,7 +10,9 @@ package="mg.telma.qoe">
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
 <application
     android:name=".init.InitApplication"
@@ -22,7 +24,7 @@ package="mg.telma.qoe">
     android:theme="@style/AppTheme"
     tools:ignore="GoogleAppIndexingWarning">
     <activity
-        android:name=".ui.activity.SplashScreenActivity"
+        android:name=".ui.activity.CellularActivity"
         android:label="@string/app_name"
         android:theme="@style/AppTheme.NoActionBar">
         <intent-filter>
@@ -50,7 +52,7 @@ package="mg.telma.qoe">
         </intent-filter>
     </activity>
     <activity
-        android:name=".ui.activity.CellularActivity"
+        android:name=".ui.activity.SplashScreenActivity"
         android:label="@string/app_name"
         android:theme="@style/AppTheme.NoActionBar">
         <intent-filter>
@@ -58,6 +60,16 @@ package="mg.telma.qoe">
             <category android:name="android.intent.category.ALTERNATIVE" />
         </intent-filter>
     </activity>
+
+    <receiver android:name=".Receiver.PhoneReceiver">
+        <intent-filter>
+            <action android:name="android.intent.action.PHONE_STATE"/>
+            <action android:name="android.intent.action.NEW_OUTGOING_CALL"/>
+        </intent-filter>
+    </receiver>
+
+    <service android:name=".service.CallTestService"/>
+    <service android:name=".service.LocationService"/>
 </application>
 
 </manifest>

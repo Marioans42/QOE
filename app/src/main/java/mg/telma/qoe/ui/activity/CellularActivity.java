@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
@@ -48,7 +49,7 @@ import mg.telma.qoe.utils.Recordings;
 import mg.telma.qoe.utils.Storage;
 
 
-public class CellularActivity extends BaseActivity  implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class CellularActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     public static String SHOW_PROGRESS = CellularActivity.class.getCanonicalName() + ".SHOW_PROGRESS";
     public static String SET_PROGRESS = CellularActivity.class.getCanonicalName() + ".SET_PROGRESS";

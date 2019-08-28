@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.github.axet.androidlibrary.widgets.ErrorDialog;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.TreeSet;
@@ -31,9 +32,11 @@ import mg.telma.qoe.app.CallApplication;
 
 public class Recordings extends com.github.axet.audiolibrary.app.Recordings {
     public static final String ID = "_id";
+
     public static final String[] CONTACTS = new String[]{
             Manifest.permission.READ_CONTACTS,
     };
+
     protected View toolbar_i;
     protected View toolbar_o;
     View refresh;
@@ -61,6 +64,7 @@ public class Recordings extends com.github.axet.audiolibrary.app.Recordings {
         public SortByContact(Context context) {
             this.context = context;
         }
+
         public String getContact(Uri uri) {
             String c = contacts.get(uri);
             if (c == null) {
@@ -98,8 +102,13 @@ public class Recordings extends com.github.axet.audiolibrary.app.Recordings {
     public void setEmptyView(View empty) {
         this.empty.setEmptyView(empty);
         refresh = empty.findViewById(R.id.refresh);
-        refresh.setOnClickListener(v -> load(false, null));
-        progressText = empty.findViewById(android.R.id.text1);
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                load(false, null);
+            }
+        });
+        progressText = (TextView) empty.findViewById(android.R.id.text1);
         progressEmpty = empty.findViewById(R.id.progress_empty);
     }
 
@@ -163,7 +172,7 @@ public class Recordings extends com.github.axet.audiolibrary.app.Recordings {
         }
     }
 
-    /*@Override
+    @Override
     public Comparator<Storage.RecordingUri> getSort() {
         SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(context);
         int selected = context.getResources().getIdentifier(shared.getString(CallApplication.PREFERENCE_SORT, context.getResources().getResourceEntryName(R.id.sort_name_ask)), "id", context.getPackageName());
@@ -192,7 +201,7 @@ public class Recordings extends com.github.axet.audiolibrary.app.Recordings {
                 return call.equals(CallApplication.CALL_OUT);
         }
         return include;
-    }*/
+    }
 
     public void setToolbar(ViewGroup v) {
         toolbar_i = v.findViewById(R.id.toolbar_in);

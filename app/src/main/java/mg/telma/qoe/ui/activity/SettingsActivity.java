@@ -1,4 +1,4 @@
-package com.github.axet.callrecorder.activities;
+package mg.telma.qoe.ui.activity;
 
 
 import android.Manifest;
@@ -6,21 +6,19 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.media.MediaRecorder;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.support.annotation.NonNull;
-import android.support.v7.app.ActionBar;
-import android.support.v7.preference.ListPreference;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceCategory;
-import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.PreferenceManager;
 import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.preference.ListPreference;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceCategory;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 
 import com.github.axet.androidlibrary.widgets.AppCompatSettingsThemeActivity;
 import com.github.axet.androidlibrary.widgets.NameFormatPreferenceCompat;
@@ -30,16 +28,17 @@ import com.github.axet.androidlibrary.widgets.StoragePathPreferenceCompat;
 import com.github.axet.androidlibrary.widgets.Toast;
 import com.github.axet.audiolibrary.app.Sound;
 import com.github.axet.audiolibrary.widgets.RecordingVolumePreference;
-import com.github.axet.callrecorder.R;
-import com.github.axet.callrecorder.app.CallApplication;
-import com.github.axet.callrecorder.app.Storage;
-import com.github.axet.callrecorder.services.RecordingService;
-import com.github.axet.callrecorder.widgets.MixerPathsPreferenceCompat;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import mg.telma.qoe.R;
+import mg.telma.qoe.app.CallApplication;
+import mg.telma.qoe.service.CallTestService;
+import mg.telma.qoe.utils.Storage;
+import mg.telma.qoe.widgets.MixerPathsPreferenceCompat;
 
 public class SettingsActivity extends AppCompatSettingsThemeActivity implements PreferenceFragmentCompat.OnPreferenceDisplayDialogCallback {
 
@@ -62,13 +61,14 @@ public class SettingsActivity extends AppCompatSettingsThemeActivity implements 
 
     @Override
     public int getAppTheme() {
-        return CallApplication.getTheme(this, R.style.RecThemeLight, R.style.RecThemeDark);
+        return 0;
     }
 
     @Override
     public String getAppThemeKey() {
         return CallApplication.PREFERENCE_THEME;
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,7 +146,7 @@ public class SettingsActivity extends AppCompatSettingsThemeActivity implements 
     @Override
     public void onBackPressed() {
         finish();
-        MainActivity.startActivity(this);
+        CellularActivity.startActivity(this);
     }
 
     @Override
@@ -201,7 +201,7 @@ public class SettingsActivity extends AppCompatSettingsThemeActivity implements 
             }
 
             OptimizationPreferenceCompat optimization = (OptimizationPreferenceCompat) manager.findPreference(CallApplication.PREFERENCE_OPTIMIZATION);
-            optimization.enable(RecordingService.class);
+            optimization.enable(CallTestService.class);
 
             bindPreferenceSummaryToValue(manager.findPreference(CallApplication.PREFERENCE_RATE));
             bindPreferenceSummaryToValue(manager.findPreference(CallApplication.PREFERENCE_THEME));

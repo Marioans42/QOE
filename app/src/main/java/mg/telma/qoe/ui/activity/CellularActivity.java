@@ -18,9 +18,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -31,14 +31,16 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.axet.androidlibrary.services.StorageProvider;
 import com.github.axet.androidlibrary.widgets.ErrorDialog;
 import com.github.axet.androidlibrary.widgets.OptimizationPreferenceCompat;
+import com.github.axet.androidlibrary.widgets.SearchView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import mg.telma.qoe.R;
@@ -100,11 +102,11 @@ public class CellularActivity extends AppCompatActivity implements SharedPrefere
                 recording = (Boolean) intent.getExtras().get("recording");
                 sec = intent.getLongExtra("sec", 0);
                 phone = intent.getStringExtra("phone");
-                //updatePanel();
+                updatePanel();
             }
             if (a.equals(SET_PROGRESS)) {
                 encoding = intent.getIntExtra("set", 0);
-                //updatePanel();
+                updatePanel();
             }
             if (a.equals(SHOW_LAST)) {
                 last();
@@ -213,8 +215,8 @@ public class CellularActivity extends AppCompatActivity implements SharedPrefere
                 CallTestService.stopButton(CellularActivity.this);
             }
         });
-        //CallTestService.isEnabled(this);
-        //updatePanel();
+        CallTestService.isEnabled(this);
+        updatePanel();
 
         View empty = findViewById(R.id.empty_list);
         recordings = new Recordings(this, list);
@@ -257,23 +259,17 @@ public class CellularActivity extends AppCompatActivity implements SharedPrefere
                         }
                     });
                     sw2 = w.findViewById(R.id.quality);
-                    sw2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                            if (isChecked)
-                                sw2.setClickable(false);
-                            update();
-                        }
+                    sw2.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        if (isChecked)
+                            sw2.setClickable(false);
+                        update();
                     });
                     sw3 = w.findViewById(R.id.taskmanagers);
-                    sw3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                            if (isChecked) {
-                                sw3.setClickable(false);
-                            }
-                            update();
+                    sw3.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                        if (isChecked) {
+                            sw3.setClickable(false);
                         }
+                        update();
                     });
                     sw4 = w.findViewById(R.id.mixedpaths_switch);
                     final MixerPaths m = new MixerPaths();
@@ -309,7 +305,7 @@ public class CellularActivity extends AppCompatActivity implements SharedPrefere
         else if (OptimizationPreferenceCompat.needBootWarning(this, CallApplication.PREFERENCE_BOOT, CallApplication.PREFERENCE_INSTALL))
             OptimizationPreferenceCompat.buildBootWarning(this).show();
 
-        CallTestService.startIfEnabled(this);
+        //CallTestService.startIfEnabled(this);
 
         Intent intent = getIntent();
         openIntent(intent);
@@ -327,18 +323,18 @@ public class CellularActivity extends AppCompatActivity implements SharedPrefere
         String a = intent.getAction();
         if (a != null && a.equals(ENABLE)) {
             MenuBuilder m = new MenuBuilder(this);
-            //MenuItem item = m.add(Menu.NONE, R.id.action_call, Menu.NONE, "");
+            MenuItem item = m.add(Menu.NONE, R.id.action_call, Menu.NONE, "");
             CallTestService.isEnabled(this);
-            //onOptionsItemSelected(item);
+            onOptionsItemSelected(item);
         }
     }
 
-    /*@Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        MenuItem call = menu.findItem(R.id.action_call);
+       MenuItem call = menu.findItem(R.id.action_call);
         boolean b = CallTestService.isEnabled(this);
         call.setChecked(b);
 
@@ -348,7 +344,7 @@ public class CellularActivity extends AppCompatActivity implements SharedPrefere
         if (!StorageProvider.isFolderCallable(this, ii, StorageProvider.getProvider().getAuthority()))
             show.setVisible(false);
 
-        *//*MenuItem search = menu.findItem(R.id.action_search);
+     MenuItem search = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -362,7 +358,7 @@ public class CellularActivity extends AppCompatActivity implements SharedPrefere
             public boolean onQueryTextChange(String newText) {
                 return false;
             }
-        });*//*
+        });
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
@@ -374,9 +370,9 @@ public class CellularActivity extends AppCompatActivity implements SharedPrefere
         recordings.onCreateOptionsMenu(menu);
 
         return true;
-    }*/
+    }
 
-   /* @Override
+   @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         final SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
         if (recordings.onOptionsItemSelected(this, item))
@@ -386,7 +382,7 @@ public class CellularActivity extends AppCompatActivity implements SharedPrefere
             case R.id.sort_contact_desc:
                 recordings.onSortOptionSelected(this, item.getItemId());
                 return true;
-            case R.id.action_settings:
+           case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
             case R.id.action_call:
@@ -401,7 +397,7 @@ public class CellularActivity extends AppCompatActivity implements SharedPrefere
                 Intent intent = item.getIntent();
                 startActivity(intent);
                 return true;
-            case R.id.action_about:
+            /*case R.id.action_about:
                 final Runnable survey = new Runnable() {
                     @Override
                     public void run() {
@@ -529,14 +525,15 @@ public class CellularActivity extends AppCompatActivity implements SharedPrefere
                     }
                 });
                 d.show();
-                return true;
+                return true;*/
         }
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
+        //Log.d(TAG, "onResume");
 
         invalidateOptionsMenu();
 
@@ -558,7 +555,7 @@ public class CellularActivity extends AppCompatActivity implements SharedPrefere
 
         recordings.load(false, done);
 
-        //updateHeader();
+        updateHeader();
 
         fab.setClickable(true);
     }
@@ -668,8 +665,9 @@ public class CellularActivity extends AppCompatActivity implements SharedPrefere
     public void onStop() {
         super.onStop();
     }
-/*
 
+
+    @SuppressLint("RestrictedApi")
     void updatePanel() {
         fab_panel.setVisibility(show ? View.VISIBLE : View.GONE);
         if (encoding >= 0) {
@@ -694,7 +692,7 @@ public class CellularActivity extends AppCompatActivity implements SharedPrefere
             fab.setImageResource(R.drawable.ic_play_arrow_black_24dp);
         }
     }
-*/
+
 
     void updateHeader() {
         Uri f = storage.getStoragePath();

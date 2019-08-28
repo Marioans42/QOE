@@ -11,6 +11,7 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -78,6 +79,6 @@ dependencies {
 
     implementation files('libs/achartengine-1.2.0.jar')
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
-
+    assets('com.google.android.exoplayer:exoplayer:2.7.3') { exclude group: 'com.android.support' }
 
 }

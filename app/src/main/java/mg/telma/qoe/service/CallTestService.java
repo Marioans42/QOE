@@ -1,7 +1,6 @@
 package mg.telma.qoe.service;
 
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -50,16 +49,14 @@ import java.io.FileDescriptor;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 
 import mg.telma.qoe.R;
 import mg.telma.qoe.app.CallApplication;
 import mg.telma.qoe.ui.activity.CellularActivity;
 import mg.telma.qoe.ui.activity.RecentCallActivity;
+import mg.telma.qoe.ui.activity.SettingsActivity;
 import mg.telma.qoe.utils.Storage;
 
 public class CallTestService extends PersistentService implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -100,12 +97,12 @@ public class CallTestService extends PersistentService implements SharedPreferen
 
     public static void Post(Context context, Throwable e) {
         Log.e(TAG, "Post", e);
-        //Toast.Post(context, "CallRecorder: " + ErrorDialog.toMessage(e));
+        Toast.Post(context, "CallRecorder: " + ErrorDialog.toMessage(e));
     }
 
     public static void Error(Context context, Throwable e) {
         Log.d(TAG, "Error", e);
-        //Toast.Error(context, "CallRecorder: " + ErrorDialog.toMessage(e));
+        Toast.Error(context, "CallRecorder: " + ErrorDialog.toMessage(e));
     }
 
 
@@ -325,7 +322,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
 
         contact = "";
         contactId = "";
-       /* if (Storage.permitted(this, SettingsActivity.CONTACTS)) {
+       if (Storage.permitted(this, SettingsActivity.CONTACTS)) {
             Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(s));
             try {
                 ContentResolver contentResolver = getContentResolver();
@@ -343,7 +340,8 @@ public class CallTestService extends PersistentService implements SharedPreferen
             } catch (RuntimeException e) {
                 Error(CallTestService.this, e);
             }
-        }*/
+        }
+
 
         call = c;
     }
@@ -377,7 +375,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
         }
     }
 
-   /* @Override
+   @Override
     public void onCreateOptimization() {
         optimization = new OptimizationPreferenceCompat.ServiceReceiver(this, NOTIFICATION_PERSISTENT_ICON, CallApplication.PREFERENCE_OPTIMIZATION, CallApplication.PREFERENCE_NEXT) {
             @Override
@@ -389,7 +387,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
             }
         };
         optimization.create();
-    }*/
+    }
 
     /*void deleteOld() {
         SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
@@ -522,7 +520,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
         }
     }
 
-    /*@SuppressLint("RestrictedApi")
+    @SuppressLint("RestrictedApi")
     public Notification buildNotification(Notification when) {
         boolean recording = thread != null;
 
@@ -552,30 +550,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
         if (encoding != null)
             builder.setViewVisibility(R.id.notification_pause, View.GONE);
 
-        builder.setTheme(CallApplication.getTheme(this, R.style.RecThemeLight, R.style.RecThemeDark))
-                .setImageViewTint(R.id.icon_circle, builder.getThemeColor(R.attr.colorButtonNormal))
-                .setMainIntent(main)
-                .setIcon(R.drawable.ic_mic_24dp)
-                .setTitle(title)
-                .setText(text)
-                .setChannel(CallApplication.from(this).channelStatus)
-                .setWhen(when)
-                .setOngoing(true)
-                .setSmallIcon(R.drawable.ic_launcher_notification_call);
-
-        return builder.build();
-    }*/
-
-    @SuppressLint("RestrictedApi")
-    /*public Notification buildPersistent(Notification when) {
-        PendingIntent main = PendingIntent.getActivity(this, 0, new Intent(this, CellularActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-
-        RemoteNotificationCompat.Builder builder = new RemoteNotificationCompat.Low(this, R.layout.notifictaion);
-
-        builder.setViewVisibility(R.id.notification_pause, View.GONE);
-        builder.setViewVisibility(R.id.notification_record, View.GONE);
-
-        builder.setTheme(CallApplication.getTheme(this, R.style.RecThemeLight, R.style.RecThemeDark))
+        builder.setTheme(CallApplication.getTheme(this, R.style.AppThemeLight, R.style.AppTheme))
                 .setChannel(CallApplication.from(this).channelPersistent)
                 .setMainIntent(main)
                 .setTitle(getString(R.string.app_name))
@@ -584,10 +559,35 @@ public class CallTestService extends PersistentService implements SharedPreferen
                 .setImageViewTint(R.id.icon_circle, builder.getThemeColor(R.attr.colorButtonNormal))
                 .setWhen(when)
                 .setOngoing(true)
-                .setSmallIcon(R.drawable.ic_launcher_notification_service);
+                .setSmallIcon(R.drawable.ic_audiotrack_dark);
 
         return builder.build();
-    }*/
+
+
+    }
+
+    @SuppressLint("RestrictedApi")
+    public Notification buildPersistent(Notification when) {
+        PendingIntent main = PendingIntent.getActivity(this, 0, new Intent(this, CellularActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+
+        RemoteNotificationCompat.Builder builder = new RemoteNotificationCompat.Low(this, R.layout.notifictaion);
+
+        builder.setViewVisibility(R.id.notification_pause, View.GONE);
+        builder.setViewVisibility(R.id.notification_record, View.GONE);
+
+        builder.setTheme(CallApplication.getTheme(this, R.style.AppThemeLight, R.style.AppTheme))
+                .setChannel(CallApplication.from(this).channelPersistent)
+                .setMainIntent(main)
+                .setTitle(getString(R.string.app_name))
+                .setText(getString(R.string.recording_enabled))
+                .setIcon(R.drawable.ic_call_black_24dp)
+                .setImageViewTint(R.id.icon_circle, builder.getThemeColor(R.attr.colorButtonNormal))
+                .setWhen(when)
+                .setOngoing(true)
+                .setSmallIcon(R.drawable.ic_audiotrack_dark);
+
+        return builder.build();
+    }
 
     public void updateIcon(boolean show) {
         boolean recording = thread != null;

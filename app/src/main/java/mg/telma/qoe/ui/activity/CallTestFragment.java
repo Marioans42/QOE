@@ -51,12 +51,12 @@ import mg.telma.qoe.utils.Recordings;
 import mg.telma.qoe.utils.Storage;
 
 
-public class CellularActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class CallTestFragment extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    public static String SHOW_PROGRESS = CellularActivity.class.getCanonicalName() + ".SHOW_PROGRESS";
-    public static String SET_PROGRESS = CellularActivity.class.getCanonicalName() + ".SET_PROGRESS";
-    public static String SHOW_LAST = CellularActivity.class.getCanonicalName() + ".SHOW_LAST";
-    public static String ENABLE = CellularActivity.class.getCanonicalName() + ".ENABLE";
+    public static String SHOW_PROGRESS = CallTestFragment.class.getCanonicalName() + ".SHOW_PROGRESS";
+    public static String SET_PROGRESS = CallTestFragment.class.getCanonicalName() + ".SET_PROGRESS";
+    public static String SHOW_LAST = CallTestFragment.class.getCanonicalName() + ".SHOW_LAST";
+    public static String ENABLE = CallTestFragment.class.getCanonicalName() + ".ENABLE";
 
 
     public static final int RESULT_CALL = 1;
@@ -135,14 +135,14 @@ public class CellularActivity extends AppCompatActivity implements SharedPrefere
     }
 
     public static void startActivity(Context context) {
-        Intent i = new Intent(context, CellularActivity.class);
+        Intent i = new Intent(context, CallTestFragment.class);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         context.startActivity(i);
     }
 
     public static void startActivity(Context context, boolean enable) {
-        Intent i = new Intent(context, CellularActivity.class);
+        Intent i = new Intent(context, CallTestFragment.class);
         i.setAction(ENABLE);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         i.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -204,7 +204,7 @@ public class CellularActivity extends AppCompatActivity implements SharedPrefere
         fab_stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CallTestService.stopButton(CellularActivity.this);
+                CallTestService.stopButton(CallTestFragment.this);
             }
         });
 
@@ -212,7 +212,7 @@ public class CellularActivity extends AppCompatActivity implements SharedPrefere
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CallTestService.stopButton(CellularActivity.this);
+                CallTestService.stopButton(CallTestFragment.this);
             }
         });
         CallTestService.isEnabled(this);
@@ -224,7 +224,7 @@ public class CellularActivity extends AppCompatActivity implements SharedPrefere
         list.setAdapter(recordings.empty);
         list.setLayoutManager(new LinearLayoutManager(this));
         list.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
-        recordings.setToolbar(findViewById(R.id.recording_toolbar));
+        //recordings.setToolbar(findViewById(R.id.recording_toolbar));
 
         final SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(this);
         if (shared.getBoolean("warning", true)) {
@@ -286,7 +286,7 @@ public class CellularActivity extends AppCompatActivity implements SharedPrefere
                                     sw4.setClickable(false);
                                 m.load();
                                 if (isChecked && !m.isEnabled())
-                                    //MixerPathsPreferenceCompat.show(CellularActivity.this);
+                                    //MixerPathsPreferenceCompat.show(CallTestFragment.this);
                                 update();
                             }
                         });
@@ -387,7 +387,7 @@ public class CellularActivity extends AppCompatActivity implements SharedPrefere
                 return true;
             case R.id.action_call:
                 item.setChecked(!item.isChecked());
-                if (item.isChecked() && !Storage.permitted(CellularActivity.this, PERMISSIONS, RESULT_CALL)) {
+                if (item.isChecked() && !Storage.permitted(CallTestFragment.this, PERMISSIONS, RESULT_CALL)) {
                     resumeCall = item;
                     return true;
                 }
@@ -427,14 +427,14 @@ public class CellularActivity extends AppCompatActivity implements SharedPrefere
                             encoder = join(", ", FormatOGG.EXT, FormatWAV.EXT, FormatFLAC.EXT, FormatM4A.EXT, FormatMP3.EXT, FormatOPUS.EXT);
                         url = url.replaceAll("%ENCODER%", encoder);
                         String source = shared.getString(CallApplication.PREFERENCE_SOURCE, "-1");
-                        String[] vv = CallApplication.getStrings(CellularActivity.this, new Locale("en"), R.array.source_values);
-                        String[] ss = CallApplication.getStrings(CellularActivity.this, new Locale("en"), R.array.source_text);
+                        String[] vv = CallApplication.getStrings(CallTestFragment.this, new Locale("en"), R.array.source_values);
+                        String[] ss = CallApplication.getStrings(CallTestFragment.this, new Locale("en"), R.array.source_text);
                         int i = Arrays.asList(vv).indexOf(source);
                         url = url.replaceAll("%SOURCE%", ss[i]);
                         url = url.replaceAll("%QUALITY%", "");
                         boolean system = (getApplicationInfo().flags & ApplicationInfo.FLAG_SYSTEM) == ApplicationInfo.FLAG_SYSTEM;
                         url = url.replaceAll("%INSTALLED%", system ? "System Preinstalled" : "User Installed");
-                        AboutPreferenceCompat.openUrl(CellularActivity.this, url);
+                        AboutPreferenceCompat.openUrl(CallTestFragment.this, url);
                     }
                 };
                 AlertDialog.Builder b = AboutPreferenceCompat.buildDialog(this, R.raw.about);
@@ -501,7 +501,7 @@ public class CellularActivity extends AppCompatActivity implements SharedPrefere
                         String url = SURVEY_URL_VIEW;
                         url = url.replaceAll("%MANUFACTURER%", Build.MANUFACTURER);
                         url = url.replaceAll("%MODEL%", android.os.Build.MODEL);
-                        AboutPreferenceCompat.openUrl(CellularActivity.this, url);
+                        AboutPreferenceCompat.openUrl(CallTestFragment.this, url);
                     }
                 });
                 ll.addView(AboutPreferenceCompat.buildTitle(this), 0);
@@ -631,7 +631,7 @@ public class CellularActivity extends AppCompatActivity implements SharedPrefere
                         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Storage.showPermissions(CellularActivity.this);
+                                Storage.showPermissions(CallTestFragment.this);
                             }
                         });
                         builder.show();

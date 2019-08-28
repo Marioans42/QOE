@@ -228,7 +228,7 @@ public class RecentCallActivity extends AppCompatActivity {
         if (!old.equals(n)) {
             String s = String.format("%s.%s", n, ext);
             Storage.rename(this, uri, s);
-            CellularActivity.last(this);
+            CallTestFragment.last(this);
         }
     }
 
@@ -240,7 +240,7 @@ public class RecentCallActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Storage.delete(RecentCallActivity.this, uri);
-                CellularActivity.last(RecentCallActivity.this);
+                CallTestFragment.last(RecentCallActivity.this);
                 alertDialog.dismiss();
             }
         });

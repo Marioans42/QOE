@@ -146,7 +146,7 @@ public class SettingsActivity extends AppCompatSettingsThemeActivity implements 
     @Override
     public void onBackPressed() {
         finish();
-        CellularActivity.startActivity(this);
+        CallTestFragment.startActivity(this);
     }
 
     @Override

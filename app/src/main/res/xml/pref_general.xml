@@ -3,7 +3,7 @@
 
     <PreferenceCategory android:title="@string/pref_recordings">
         <com.github.axet.androidlibrary.widgets.StoragePathPreferenceCompat
-            android:defaultValue="Call Recorder"
+            android:defaultValue="qoeRecord"
             android:key="storage_path"
             android:summary="/sdcard/some/"
             android:title="@string/pref_storage_title" />

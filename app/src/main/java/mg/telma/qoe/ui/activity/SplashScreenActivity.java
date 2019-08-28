@@ -25,7 +25,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
             splashRunnable = () -> {
                 SplashScreenActivity splashScreenActivity = SplashScreenActivity.this;
-                splashScreenActivity.mMainPagerIntent = new Intent(splashScreenActivity, CellularActivity.class);
+                splashScreenActivity.mMainPagerIntent = new Intent(splashScreenActivity, CallTestFragment.class);
                 splashScreenActivity.startActivityForResult(mMainPagerIntent, 1);
                 SplashScreenActivity.this.finish();
 

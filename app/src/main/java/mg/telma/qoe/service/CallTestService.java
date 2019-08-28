@@ -54,7 +54,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import mg.telma.qoe.R;
 import mg.telma.qoe.app.CallApplication;
-import mg.telma.qoe.ui.activity.CellularActivity;
+import mg.telma.qoe.ui.activity.CallTestFragment;
 import mg.telma.qoe.ui.activity.RecentCallActivity;
 import mg.telma.qoe.ui.activity.SettingsActivity;
 import mg.telma.qoe.utils.Storage;
@@ -113,7 +113,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
     public static boolean isEnabled(Context context) {
         final SharedPreferences shared = PreferenceManager.getDefaultSharedPreferences(context);
         boolean b = shared.getBoolean(CallApplication.PREFERENCE_CALL, false);
-        if (!Storage.permitted(context, CellularActivity.MUST))
+        if (!Storage.permitted(context, CallTestFragment.MUST))
             b = false;
         return b;
     }
@@ -458,7 +458,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
             stopButton(this);
         } else if (a.equals(SHOW_ACTIVITY)) {
             ProximityShader.closeSystemDialogs(this);
-            CellularActivity.startActivity(this);
+            CallTestFragment.startActivity(this);
         }
     }
 
@@ -568,7 +568,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
 
     @SuppressLint("RestrictedApi")
     public Notification buildPersistent(Notification when) {
-        PendingIntent main = PendingIntent.getActivity(this, 0, new Intent(this, CellularActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent main = PendingIntent.getActivity(this, 0, new Intent(this, CallTestFragment.class), PendingIntent.FLAG_UPDATE_CURRENT);
 
         RemoteNotificationCompat.Builder builder = new RemoteNotificationCompat.Low(this, R.layout.notifictaion);
 
@@ -591,7 +591,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
 
     public void updateIcon(boolean show) {
         boolean recording = thread != null;
-        CellularActivity.showProgress(CallTestService.this, show, phone, samplesTime / sampleRate, recording);
+        CallTestFragment.showProgress(CallTestService.this, show, phone, samplesTime / sampleRate, recording);
         optimization.icon.updateIcon(show ? new Intent() : null);
     }
 
@@ -686,7 +686,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
 
                         CallApplication.setContact(CallTestService.this, info.targetUri, info.contactId);
                         CallApplication.setCall(CallTestService.this, info.targetUri, info.call);
-                        CellularActivity.last(CallTestService.this);
+                        CallTestFragment.last(CallTestService.this);
                         showDone(info.targetUri);
                     }
                 };
@@ -725,7 +725,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
                             samplesTimeCount += samples;
                             if (samplesTimeCount > samplesTimeUpdate) {
                                 samplesTimeCount -= samplesTimeUpdate;
-                                CellularActivity.showProgress(CallTestService.this, true, phone, samplesTime / sampleRate, true);
+                                CallTestFragment.showProgress(CallTestService.this, true, phone, samplesTime / sampleRate, true);
                             }
                         }
                     }
@@ -865,7 +865,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
 
                             CallApplication.setContact(CallTestService.this, info.targetUri, info.contactId);
                             CallApplication.setCall(CallTestService.this, info.targetUri, info.call);
-                            CellularActivity.last(CallTestService.this);
+                            CallTestFragment.last(CallTestService.this);
                             showDone(info.targetUri);
                         }
                     };
@@ -881,7 +881,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
                         while (!interrupt.get()) {
                             Thread.sleep(1000);
                             samplesTime += 1000 * sampleRate / 1000; // per 1 second
-                            CellularActivity.showProgress(CallTestService.this, true, phone, samplesTime / sampleRate, true);
+                            CallTestFragment.showProgress(CallTestService.this, true, phone, samplesTime / sampleRate, true);
                         }
                     } catch (RuntimeException e) {
                         Storage.delete(CallTestService.this, info.targetUri);
@@ -934,7 +934,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
             public void run() {
                 Storage.delete(in); // delete raw recording
 
-                CellularActivity.showProgress(CallTestService.this, false, phone, samplesTime / sampleRate, false);
+                CallTestFragment.showProgress(CallTestService.this, false, phone, samplesTime / sampleRate, false);
 
                 SharedPreferences.Editor edit = shared.edit();
                 edit.putString(CallApplication.PREFERENCE_LAST, Storage.getName(CallTestService.this, fly.targetUri));
@@ -949,7 +949,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
         encoder.run(new Runnable() {
             @Override
             public void run() {  // progress
-                CellularActivity.setProgress(CallTestService.this, encoder.getProgress());
+                CallTestFragment.setProgress(CallTestService.this, encoder.getProgress());
             }
         }, new Runnable() {
             @Override
@@ -960,7 +960,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
             @Override
             public void run() { // error
                 Storage.delete(CallTestService.this, fly.targetUri);
-                CellularActivity.showProgress(CallTestService.this, false, phone, samplesTime / sampleRate, false);
+                CallTestFragment.showProgress(CallTestService.this, false, phone, samplesTime / sampleRate, false);
                 Error(CallTestService.this, encoder.getException());
                 done.run();
                 handle.removeCallbacks(encodingNext);
@@ -974,7 +974,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
             stopRecording();
         else
             startRecording();
-        CellularActivity.showProgress(this, true, phone, samplesTime / sampleRate, thread != null);
+        CallTestFragment.showProgress(this, true, phone, samplesTime / sampleRate, thread != null);
     }
 
     void stopRecording() {
@@ -1064,7 +1064,7 @@ public class CallTestService extends PersistentService implements SharedPreferen
                 mapTarget.remove(inFile);
                 CallApplication.setContact(CallTestService.this, t, contactId);
                 CallApplication.setCall(CallTestService.this, t, call);
-                CellularActivity.last(CallTestService.this);
+                CallTestFragment.last(CallTestService.this);
                 showDone(t);
             }
         });

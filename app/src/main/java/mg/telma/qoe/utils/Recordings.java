@@ -203,7 +203,7 @@ public class Recordings extends com.github.axet.audiolibrary.app.Recordings {
         return include;
     }
 
-    public void setToolbar(ViewGroup v) {
+    /*public void setToolbar(ViewGroup v) {
         toolbar_i = v.findViewById(R.id.toolbar_in);
         toolbar_i.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -229,7 +229,7 @@ public class Recordings extends com.github.axet.audiolibrary.app.Recordings {
             }
         });
         super.setToolbar(v);
-    }
+    }*/
 
     protected void selectToolbar() {
         super.selectToolbar();

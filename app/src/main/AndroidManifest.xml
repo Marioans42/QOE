@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-package="mg.telma.qoe"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="mg.telma.qoe"
     android:installLocation="auto">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -12,102 +12,111 @@ package="mg.telma.qoe"
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.CAPTURE_AUDIO_OUTPUT" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-
-<application
-    android:name=".app.CallApplication"
-    android:allowBackup="true"
-    android:icon="@mipmap/ic_launcher"
-    android:label="@string/app_name"
-    android:roundIcon="@mipmap/ic_launcher_round"
-    android:supportsRtl="true"
-    android:theme="@style/AppTheme"
-    tools:ignore="GoogleAppIndexingWarning">
-    <activity
-        android:name=".ui.activity.CallTestFragment"
+    <application
+        android:name=".app.CallApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme.NoActionBar">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity
+            android:name=".MainActivityDrawer"
+            android:label="@string/title_activity_main_drawer"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".ui.activity.SplashScreenActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
-    <activity
-        android:name=".MainActivity"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme.NoActionBar">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.ALTERNATIVE" />
-        </intent-filter>
-    </activity>
-    <activity
-        android:name=".ui.activity.SpeedTestActivity"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme.NoActionBar">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.ALTERNATIVE" />
-        </intent-filter>
-    </activity>
-    <activity
-        android:name=".ui.activity.SettingsActivity"
-        android:label="@string/app_name" />
-    <activity
-        android:name=".ui.activity.SplashScreenActivity"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme.NoActionBar">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.ALTERNATIVE" />
-        </intent-filter>
-    </activity>
-    <activity
-        android:name=".ui.activity.RecentCallActivity"
-        android:excludeFromRecents="true"
-        android:label="@string/app_name"
-        android:launchMode="singleInstance"
-        android:noHistory="true"
-        android:taskAffinity="com.github.axet.callrecorder.hide" />
-    <service android:name=".service.CallTestService"/>
-    <service
-        android:name=".utils.TileService"
-        android:icon="@drawable/ic_call_black_24dp"
-        android:label="@string/recording_enabled"
-        android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
-        <intent-filter>
-            <action android:name="android.service.quicksettings.action.QS_TILE" />
-        </intent-filter>
-    </service>
-    <receiver android:name=".Receiver.OnBootReceiver">
-        <intent-filter>
-            <action android:name="android.intent.action.BOOT_COMPLETED" />
-            <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-            <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
-        </intent-filter>
-    </receiver>
-    <receiver android:name=".Receiver.OnUpgradeReceiver">
-        <intent-filter>
-            <action android:name="android.intent.action.PACKAGE_REPLACED" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-            <data android:scheme="package" />
-        </intent-filter>
-    </receiver>
-    <receiver android:name=".Receiver.OnExternalReceiver">
-        <intent-filter>
-            <action android:name="android.intent.action.EXTERNAL_APPLICATIONS_AVAILABLE" />
-        </intent-filter>
-    </receiver>
+                <category android:name="android.intent.category.ALTERNATIVE" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.activity.SpeedTestActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-    <provider
-        android:name="com.github.axet.androidlibrary.services.StorageProvider"
-        android:authorities="mg.telma.qoe"
-        android:exported="false"
-        android:grantUriPermissions="true" />
+                <category android:name="android.intent.category.ALTERNATIVE" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.activity.SettingsActivity"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".ui.activity.CallTestFragment"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-</application>
+                <category android:name="android.intent.category.ALTERNATIVE" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.activity.RecentCallActivity"
+            android:excludeFromRecents="true"
+            android:label="@string/app_name"
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:taskAffinity="com.github.axet.callrecorder.hide" />
+
+        <service android:name=".service.CallTestService" />
+        <service
+            android:name=".utils.TileService"
+            android:icon="@drawable/ic_call_black_24dp"
+            android:label="@string/recording_enabled"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+
+        <receiver android:name=".Receiver.OnBootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".Receiver.OnUpgradeReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REPLACED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".Receiver.OnExternalReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.EXTERNAL_APPLICATIONS_AVAILABLE" />
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:name="com.github.axet.androidlibrary.services.StorageProvider"
+            android:authorities="mg.telma.qoe"
+            android:exported="false"
+            android:grantUriPermissions="true" />
+    </application>
 
 </manifest>

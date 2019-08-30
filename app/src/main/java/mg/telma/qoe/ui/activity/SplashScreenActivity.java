@@ -7,6 +7,7 @@ import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import mg.telma.qoe.MainActivityDrawer;
 import mg.telma.qoe.R;
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -25,7 +26,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
             splashRunnable = () -> {
                 SplashScreenActivity splashScreenActivity = SplashScreenActivity.this;
-                splashScreenActivity.mMainPagerIntent = new Intent(splashScreenActivity, CallTestFragment.class);
+                splashScreenActivity.mMainPagerIntent = new Intent(splashScreenActivity, MainActivityDrawer.class);
                 splashScreenActivity.startActivityForResult(mMainPagerIntent, 1);
                 SplashScreenActivity.this.finish();
 

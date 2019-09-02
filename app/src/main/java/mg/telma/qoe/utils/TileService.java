@@ -8,7 +8,7 @@ import android.service.quicksettings.Tile;
 import mg.telma.qoe.R;
 import mg.telma.qoe.app.CallApplication;
 import mg.telma.qoe.service.CallTestService;
-import mg.telma.qoe.ui.activity.CallTestFragment;
+import mg.telma.qoe.ui.activity.CallTestActivity;
 
 @TargetApi(24)
 public class TileService extends android.service.quicksettings.TileService {
@@ -62,8 +62,8 @@ public class TileService extends android.service.quicksettings.TileService {
     public void onClick() {
         super.onClick();
         boolean b = !CallTestService.isEnabled(this);
-        if(b && !Storage.permitted(this, CallTestFragment.PERMISSIONS)){
-            CallTestFragment.startActivity(this, true);
+        if(b && !Storage.permitted(this, CallTestActivity.PERMISSIONS)){
+            CallTestActivity.startActivity(this, true);
             return;
         }
         CallTestService.setEnabled(this, b);

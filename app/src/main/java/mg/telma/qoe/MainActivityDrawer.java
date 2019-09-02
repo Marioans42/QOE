@@ -13,7 +13,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
 
-import mg.telma.qoe.ui.activity.CallTestFragment;
+import mg.telma.qoe.ui.activity.CallTestActivity;
 
 public class MainActivityDrawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -74,16 +74,16 @@ public class MainActivityDrawer extends AppCompatActivity
         if (id == R.id.nav_home) {
             startActivity(new Intent(MainActivityDrawer.this, MainActivity.class));
         } else if (id == R.id.nav_gallery) {
-            startActivity(new Intent(MainActivityDrawer.this, MainActivity.class));
+            startActivity(new Intent(MainActivityDrawer.this, CallTestActivity.class));
 
-        } else if (id == R.id.nav_slideshow) {
-            startActivity(new Intent(MainActivityDrawer.this, CallTestFragment.class));
+        /*} else if (id == R.id.nav_slideshow) {
+            startActivity(new Intent(MainActivityDrawer.this, CallTestActivity.class));
 
         } else if (id == R.id.nav_tools) {
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_send) {*/
 
         }
 

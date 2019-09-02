@@ -76,6 +76,7 @@ public class RecentCallActivity extends AppCompatActivity {
 
         storage = new Storage(this);
 
+
         LayoutInflater inflater = LayoutInflater.from(this);
         final View v = inflater.inflate(R.layout.activity_recentcall, null);
 
@@ -228,7 +229,7 @@ public class RecentCallActivity extends AppCompatActivity {
         if (!old.equals(n)) {
             String s = String.format("%s.%s", n, ext);
             Storage.rename(this, uri, s);
-            CallTestFragment.last(this);
+            CallTestActivity.last(this);
         }
     }
 
@@ -240,7 +241,7 @@ public class RecentCallActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Storage.delete(RecentCallActivity.this, uri);
-                CallTestFragment.last(RecentCallActivity.this);
+                CallTestActivity.last(RecentCallActivity.this);
                 alertDialog.dismiss();
             }
         });

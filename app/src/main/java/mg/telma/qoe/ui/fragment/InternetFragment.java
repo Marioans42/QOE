@@ -165,7 +165,7 @@ public class InternetFragment extends Fragment {
                         @Override
                         public void run() {
                             startButton.setTextSize(13);
-                            startButton.setText(String.format("Host Location: %s [Distance: %s km]", info.get(2), new DecimalFormat("#.##").format(distance / 1000)));
+                            startButton.setText(String.format("Test en cours", info.get(2), new DecimalFormat("#.##").format(distance / 1000)));
                         }
                     });
 

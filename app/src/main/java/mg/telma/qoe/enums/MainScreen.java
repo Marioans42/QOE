@@ -5,14 +5,14 @@ import androidx.fragment.app.Fragment;
 import mg.telma.qoe.R;
 import mg.telma.qoe.ui.fragment.InternetFragment;
 import mg.telma.qoe.ui.fragment.MainFragment;
-import mg.telma.qoe.ui.fragment.VideoFragment;
+import mg.telma.qoe.ui.fragment.WebFragment;
 
 public enum MainScreen {
 
 
     MAIN(R.id.nav_home, R.drawable.ic_home_black_24dp, R.string.activity_main_cell, new MainFragment()),
     INTERNET(R.id.nav_internet, R.drawable.ic_network_check_black_24dp, R.string.activity_main_internet, new InternetFragment()),
-    VIDEO(R.id.nav_video, R.drawable.ic_video_library_black_24dp, R.string.activity_main_video, new VideoFragment());
+    VIDEO(R.id.nav_video, R.drawable.ic_video_library_black_24dp, R.string.activity_main_video, new WebFragment());
 
 
     private int menuItemId;

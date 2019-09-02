@@ -1,10 +1,12 @@
 package mg.telma.qoe.ui.fragment;
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -35,6 +37,8 @@ public class WebFragment extends Fragment implements AdapterView.OnItemSelectedL
     private boolean isTestWiki;
     double startTime ;
 
+    CountDownTimer mTimer;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -49,33 +53,61 @@ public class WebFragment extends Fragment implements AdapterView.OnItemSelectedL
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin.setAdapter(adapter);
         spin.setOnItemSelectedListener(this);
-        mWebView.setVisibility(View.INVISIBLE);
+        //mWebView.setVisibility(View.INVISIBLE);
         mButton.setOnClickListener(view -> {
-            Boolean pingTestStarted = false;
-            Boolean pingTestFinished = false;
-            Boolean downloadTestStarted = false;
-            Boolean downloadTestFinished = false;
-            Boolean uploadTestStarted = false;
-            Boolean uploadTestFinished = false;
+
+            mTimer = new CountDownTimer(15000, 1000) {
+
+                String[] myArray = {"https://Google.com", "https://youtube.com","https://facebook.com"};
 
 
+                int currentIndex = 0;
 
-            while (true) {
-                if (!pingTestStarted) {
-                    new WebTestService(mWebView, pages[0], getActivity()).start();
-                    pingTestStarted = true;
-                }
-                if (pingTestFinished && !downloadTestStarted) {
-                    new WebTestService(mWebView, pages[1], getActivity()).start();
-                    downloadTestStarted = true;
-                }
-                if (downloadTestFinished && !uploadTestStarted) {
-                    new WebTestService(mWebView, pages[2], getActivity()).start();
-                    uploadTestStarted = true;
+                public void onTick(long millisUntilFinished) {
+
+                    //number.setText("" + millisUntilFinished / 1000);
                 }
 
-               break;
-            }
+                //code comment start
+                // i think this part could be written better
+                // but it works!!!
+                public void onFinish() {
+                    if (currentIndex < myArray.length) {
+
+                        mWebView.loadUrl(myArray[currentIndex]);
+                        currentIndex++;
+                    } else {
+                        currentIndex = 0;
+                        if (currentIndex < myArray.length)
+
+                            mWebView.loadUrl(myArray[currentIndex]);
+                        currentIndex++;
+                        mTimer.start();
+                    }
+
+                    mTimer.start();
+
+                }
+                //code comment end
+            };
+
+            mTimer.start();
+           // mWebView = (WebView) findViewById(R.id.webView);
+            mWebView.getSettings().setJavaScriptEnabled(true);
+            //URL of first image
+            mWebView.loadUrl("https://dl.dropbox.com/firstimage.png");
+            mWebView.setWebViewClient(new WebViewClient() {
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    super.onPageFinished(mWebView, url);
+
+                }
+
+                @Override
+                public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+
+                }
+            });
 
 
         });

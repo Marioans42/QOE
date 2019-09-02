@@ -67,9 +67,17 @@ public class WebTestService extends Thread {
                     }
                 });
 
+                try {
+                    sleep(200);
+                    System.out.println("sleeping :" );
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 mWebView.setOnTouchListener((v, event) -> true);
                 // Enable JavaScript
                 mWebView.getSettings().setJavaScriptEnabled(true);
+
+                mWebView.clearCache(true);
 
                 // Load the url in the WebView
 

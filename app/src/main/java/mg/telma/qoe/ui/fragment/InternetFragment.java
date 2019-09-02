@@ -256,7 +256,7 @@ public class InternetFragment extends Fragment {
 
                     //Init Test
                     System.out.println("Info: " + info.get(6));
-                    final PingTestService pingTest = new PingTestService("youtube.com", 6);
+                    final PingTestService pingTest = new PingTestService("41.188.35.110", 6);
                     System.out.println("Download adresse: " + uploadAddr.replace(uploadAddr.split("/")[uploadAddr.split("/").length - 1], ""));
                     final DownloadTestService downloadTest = new DownloadTestService(uploadAddr.replace(uploadAddr.split("/")[uploadAddr.split("/").length - 1], ""));
                     System.out.println("Upload adresse: " + uploadAddr);

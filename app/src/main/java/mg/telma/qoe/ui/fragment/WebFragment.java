@@ -18,7 +18,6 @@ import androidx.fragment.app.Fragment;
 import java.text.DecimalFormat;
 
 import mg.telma.qoe.R;
-import mg.telma.qoe.service.WebTestService;
 
 public class WebFragment extends Fragment implements AdapterView.OnItemSelectedListener{
 
@@ -56,7 +55,7 @@ public class WebFragment extends Fragment implements AdapterView.OnItemSelectedL
         //mWebView.setVisibility(View.INVISIBLE);
         mButton.setOnClickListener(view -> {
 
-            mTimer = new CountDownTimer(15000, 1000) {
+            mTimer = new CountDownTimer(5000, 1000) {
 
                 String[] myArray = {"https://Google.com", "https://youtube.com","https://facebook.com"};
 
@@ -82,10 +81,10 @@ public class WebFragment extends Fragment implements AdapterView.OnItemSelectedL
 
                             mWebView.loadUrl(myArray[currentIndex]);
                         currentIndex++;
-                        mTimer.start();
+                        //mTimer.start();
                     }
 
-                    mTimer.start();
+                    //mTimer.start();
 
                 }
                 //code comment end
@@ -95,7 +94,6 @@ public class WebFragment extends Fragment implements AdapterView.OnItemSelectedL
            // mWebView = (WebView) findViewById(R.id.webView);
             mWebView.getSettings().setJavaScriptEnabled(true);
             //URL of first image
-            mWebView.loadUrl("https://dl.dropbox.com/firstimage.png");
             mWebView.setWebViewClient(new WebViewClient() {
                 @Override
                 public void onPageFinished(WebView view, String url) {

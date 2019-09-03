@@ -2,7 +2,9 @@ package mg.telma.qoe.ui.activity;
 
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,7 +19,10 @@ import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
+import com.badlogic.audio.analysis.FFT;
+import com.badlogic.audio.io.MP3Decoder;
 
+import java.io.FileInputStream;
 import java.util.Arrays;
 
 import mg.telma.qoe.R;
@@ -41,11 +46,13 @@ public class TestSpectre extends AppCompatActivity implements AdapterView.OnItem
     XYSeries gData;
     //set colour of lines and points
     LineAndPointFormatter gDataFormat;
+    public static final String FILE = Uri.parse("android.resource://mg.telma.qoe/res/raw/mozart").toString();
 
     //onCreate is done on the creation of the class (when the app starts up)
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+        System.out.println("PATH FILE "+ MediaStore.Images.Media.DATA);
         super.onCreate(savedInstanceState);
         //set screen to be landscape only
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -101,7 +108,7 @@ public class TestSpectre extends AppCompatActivity implements AdapterView.OnItem
     //class is called everytime the button is pressed
     public void onClick(View v) {
         //if either the second or third choice in the spinnerChoice i.e. time or absfft
-        if (xformchoice>0){
+/*        if (xformchoice>0){
 
             //get fs from edittext box, if user hasnt ented anything set fs to 1000
             try{
@@ -202,6 +209,50 @@ public class TestSpectre extends AppCompatActivity implements AdapterView.OnItem
             //add series with line and dot format specified earlier to graph
             graph.addSeries(gData, gDataFormat);
             graph.redraw();
-        }//end onclick class
+        }*///end onclick class
+        try {
+            test();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }//end main class
+
+    private void test() throws Exception {
+
+        MP3Decoder decoder = new MP3Decoder( new FileInputStream( Uri.parse("android.resource://mg.telma.qoe/raw/mozart").toString()) );
+        FFT fft = new FFT( 1024, 44100 );
+        fft.window( FFT.HAMMING );
+        float[] samples = new float[1024];
+        float[] spectrum = new float[1024 / 2 + 1];
+        float[] lastSpectrum = new float[1024 / 2 + 1];
+        Number [] tograph = new Number[512];
+
+        while( decoder.readSamples( samples ) > 0 )
+        {
+            fft.forward( samples );
+            System.arraycopy( spectrum, 0, lastSpectrum, 0, spectrum.length );
+            System.arraycopy( fft.getSpectrum(), 0, spectrum, 0, spectrum.length );
+
+            float flux = 0;
+            for( int i = 0; i < spectrum.length; i++ )
+            {
+                float value = (spectrum[i] - lastSpectrum[i]);
+                tograph[i] = value < 0? 0: value;
+            }
+            //tograph.add( flux );
+        }
+
+        graph.clear();
+        //put data from tograph into a series to be added to the graph
+        gData = new SimpleXYSeries(Arrays.asList(tograph), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "gData");
+        //add series with line and dot format specified earlier to graph
+        graph.addSeries(gData, gDataFormat);
+        graph.redraw();
+
+
+        /*Plot plot = new Plot( "Spectral Flux", 1024, 512 );
+        plot.plot( spectralFlux, 1, Color.red );
+        new PlaybackVisualizer( plot, 1024, new MP3Decoder( new FileInputStream( FILE ) ) );*/
+
+    }
 }

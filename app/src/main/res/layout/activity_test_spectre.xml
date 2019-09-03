@@ -1,0 +1,99 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:screenOrientation="landscape"
+    >
+
+    <TextView
+        android:id="@+id/textViewFcy"
+        android:layout_width="45dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:padding="10dp"
+        android:text="Fcy"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <EditText
+        android:id="@+id/editF"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/textViewFcy"
+        android:padding="10dp"
+        android:inputType="number" />
+
+    <TextView
+        android:id="@+id/textViewFS"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/editF"
+        android:padding="10dp"
+        android:text="FS"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <EditText
+        android:id="@+id/editFs"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/textViewFS"
+        android:padding="10dp"
+        android:inputType="number" />
+
+    <TextView
+        android:id="@+id/textViewN"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/editFs"
+        android:padding="10dp"
+        android:text="N"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <EditText
+        android:id="@+id/editN"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/textViewN"
+        android:padding="10dp"
+        android:inputType="number" />
+
+    <Spinner
+        android:id="@+id/spinnerChoice"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/editN"
+        android:padding="10dp"/>
+    <Spinner
+        android:id="@+id/spinnerIpType"
+        android:layout_width="95dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/spinnerChoice"
+        android:padding="10dp"/>
+
+    <Button
+        android:id="@+id/buttonGo"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/spinnerIpType"
+        android:padding="10dp"
+        android:text="Go" />
+
+    <com.androidplot.xy.XYPlot
+        android:id="@+id/graph"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:layout_above="@+id/editF"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        title=""/>
+</RelativeLayout>

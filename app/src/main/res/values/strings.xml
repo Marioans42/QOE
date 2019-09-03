@@ -140,4 +140,16 @@
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
     <string name="title_activity_main_drawer">MainActivityDrawer</string>
+    
+    <string name="title_activity_signal_analyser">SignalAnalyser</string>
+    <string-array name = "spinnerchoice">
+        <item>Mode</item>
+        <item>Time</item>
+        <item>ABSFFT</item>
+    </string-array>
+    <string-array name = "spinnerIpType">
+        <item>I/P</item>
+        <item>Dev</item>
+        <item>AUX</item>
+    </string-array>
 </resources>

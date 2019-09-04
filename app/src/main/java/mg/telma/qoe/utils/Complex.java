@@ -123,10 +123,4 @@ public class Complex {
     }*/
 
     // sample client for testing
-    public static void main(String[] args) {
-        Complex a = new Complex(5.0, 6.0);
-        Complex b = new Complex(-3.0, 4.0);
-
-    }
-
 }

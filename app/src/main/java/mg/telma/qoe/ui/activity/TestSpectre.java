@@ -4,7 +4,6 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,12 +18,12 @@ import com.androidplot.xy.LineAndPointFormatter;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
-import com.badlogic.audio.analysis.FFT;
-import com.badlogic.audio.io.MP3Decoder;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.util.Arrays;
 
+import analysis.FFT;
 import mg.telma.qoe.R;
 import mg.telma.qoe.utils.Complex;
 
@@ -52,12 +51,18 @@ public class TestSpectre extends AppCompatActivity implements AdapterView.OnItem
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-        System.out.println("PATH FILE "+ MediaStore.Images.Media.DATA);
+
+
         super.onCreate(savedInstanceState);
         //set screen to be landscape only
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         //use activity_signal_analyser.xml for layout
         setContentView(R.layout.activity_test_spectre);
+        System.out.println(" FILE DIR"+ getFilesDir().getAbsolutePath());
+        File file = new File(getFilesDir().getAbsolutePath());
+        for(String f : file.list()) {
+            System.out.println(" FILE "+ f);
+        }
         gDataFormat = new LineAndPointFormatter(Color.rgb(0, 200, 0), Color.rgb(0, 100, 0), null, null);
         //map objects to their counterparts in xml file
         graph = findViewById(R.id.graph);
@@ -219,7 +224,7 @@ public class TestSpectre extends AppCompatActivity implements AdapterView.OnItem
 
     private void test() throws Exception {
 
-        MP3Decoder decoder = new MP3Decoder( new FileInputStream( Uri.parse("android.resource://mg.telma.qoe/raw/mozart").toString()) );
+        MP3Decoder decoder = new MP3Decoder( new FileInputStream( getFilesDir()+"/mozart.mp3") );
         FFT fft = new FFT( 1024, 44100 );
         fft.window( FFT.HAMMING );
         float[] samples = new float[1024];

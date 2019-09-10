@@ -2,13 +2,7 @@ apply plugin: 'java-library'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    implementation files('libs/jl1.0.jar')
-    implementation files('libs/jlayer-1.0.1.jar')
-    implementation files('libs/mp3spi1.9.4.jar')
-    implementation files('libs/tritonus_aos.jar')
-    implementation files('libs/tritonus_share.jar')
 }
 
-sourceCompatibility = "8"
-targetCompatibility = "8"
+sourceCompatibility = "1.6"
+targetCompatibility = "1.6"

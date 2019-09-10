@@ -155,7 +155,7 @@ public class AudioFormat {
 
         public final boolean equals(Object var1) {
             if (this.toString() != null) {
-                return var1 instanceof javax.sound.sampled.AudioFormat.Encoding ? this.toString().equals(var1.toString()) : false;
+                return var1 instanceof AudioFormat.Encoding ? this.toString().equals(var1.toString()) : false;
             } else {
                 return var1 != null && var1.toString() == null;
             }

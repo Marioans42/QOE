@@ -82,11 +82,11 @@ public class AudioFileFormat {
     }
 
     public static class Type {
-        public static final com.example.lib.Type WAVE = new com.example.lib.Type("WAVE", "wav");
-        public static final com.example.lib.Type AU = new com.example.lib.Type("AU", "au");
-        public static final com.example.lib.Type AIFF = new com.example.lib.Type("AIFF", "aif");
-        public static final com.example.lib.Type AIFC = new com.example.lib.Type("AIFF-C", "aifc");
-        public static final com.example.lib.Type SND = new com.example.lib.Type("SND", "snd");
+        public static final AudioFileFormat.Type WAVE = new AudioFileFormat.Type("WAVE", "wav");
+        public static final AudioFileFormat.Type AU = new AudioFileFormat.Type("AU", "au");
+        public static final AudioFileFormat.Type AIFF = new AudioFileFormat.Type("AIFF", "aif");
+        public static final AudioFileFormat.Type AIFC = new AudioFileFormat.Type("AIFF-C", "aifc");
+        public static final AudioFileFormat.Type SND = new AudioFileFormat.Type("SND", "snd");
         private final String name;
         private final String extension;
 
@@ -97,7 +97,7 @@ public class AudioFileFormat {
 
         public final boolean equals(Object var1) {
             if (this.toString() != null) {
-                return var1 instanceof com.example.lib.Type ? this.toString().equals(var1.toString()) : false;
+                return var1 instanceof AudioFileFormat.Type ? this.toString().equals(var1.toString()) : false;
             } else {
                 return var1 != null && var1.toString() == null;
             }

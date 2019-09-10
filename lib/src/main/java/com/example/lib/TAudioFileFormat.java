@@ -14,7 +14,7 @@ public class TAudioFileFormat extends AudioFileFormat{
         super(type, nLengthInBytes, audioFormat, nLengthInFrames);
     }
 
-    public TAudioFileFormat(com.example.lib.Type type, AudioFormat audioFormat, int nLengthInFrames, int nLengthInBytes, Map properties) {
+    public TAudioFileFormat(AudioFileFormat.Type type, AudioFormat audioFormat, int nLengthInFrames, int nLengthInBytes, Map properties) {
         super(type, nLengthInBytes, audioFormat, nLengthInFrames);
         this.initMaps(properties);
     }

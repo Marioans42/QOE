@@ -2,8 +2,12 @@ package mg.telma.qoe.ui.activity;
 
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.media.AudioFormat;
+import android.media.AudioManager;
+import android.media.AudioTrack;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,6 +25,7 @@ import com.androidplot.xy.XYSeries;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.nio.ShortBuffer;
 import java.util.Arrays;
 
 import analysis.FFT;
@@ -223,37 +228,38 @@ public class TestSpectre extends AppCompatActivity implements AdapterView.OnItem
         }
     }//end main class
 
+    ShortBuffer mSamples; // the samples to play
+    int mNumSamples;
+    final int SAMPLE_RATE = 44100;
+    boolean mShouldContinue;
+
     private void test() throws Exception {
 
-        MP3Decoder decoder = new MP3Decoder( new FileInputStream( getFilesDir()+"/mozart.mp3") );
-        FFT fft = new FFT( 1024, 44100 );
-        fft.window( FFT.HAMMING );
-        float[] samples = new float[1024];
-        float[] spectrum = new float[1024 / 2 + 1];
-        float[] lastSpectrum = new float[1024 / 2 + 1];
-        Number [] tograph = new Number[512];
+        int minBufferSize = AudioTrack.getMinBufferSize(SAMPLE_RATE, AudioFormat.CHANNEL_OUT_MONO,
+                AudioFormat.ENCODING_PCM_16BIT);
+        int bufferSize = 512;
+        AudioTrack audioTrack = new AudioTrack(
+                AudioManager.STREAM_MUSIC,
+                SAMPLE_RATE,
+                AudioFormat.CHANNEL_OUT_MONO,
+                AudioFormat.ENCODING_PCM_16BIT,
+                bufferSize,
+                AudioTrack.MODE_STREAM);
+System.out.println("Bonjour");
 
-        while( decoder.readSamples( samples ) > 0 )
+       /* FileInputStream fin = new FileInputStream(path);
+        DataInputStream dis = new DataInputStream(fin);*/
+
+        audioTrack.play();
+      /*  while ((i = dis.read(s, 0, bufferSize)) > -1)
         {
-            fft.forward( samples );
-            System.arraycopy( spectrum, 0, lastSpectrum, 0, spectrum.length );
-            System.arraycopy( fft.getSpectrum(), 0, spectrum, 0, spectrum.length );
+            at.write(s, 0, i);
 
-            float flux = 0;
-            for( int i = 0; i < spectrum.length; i++ )
-            {
-                float value = (spectrum[i] - lastSpectrum[i]);
-                tograph[i] = value < 0? 0: value;
-            }
-            //tograph.add( flux );
         }
-
-        graph.clear();
-        //put data from tograph into a series to be added to the graph
-        gData = new SimpleXYSeries(Arrays.asList(tograph), SimpleXYSeries.ArrayFormat.Y_VALS_ONLY, "gData");
-        //add series with line and dot format specified earlier to graph
-        graph.addSeries(gData, gDataFormat);
-        graph.redraw();
+        at.stop();
+        at.release();
+        dis.close();
+        fin.close();*/
 
 
         /*Plot plot = new Plot( "Spectral Flux", 1024, 512 );

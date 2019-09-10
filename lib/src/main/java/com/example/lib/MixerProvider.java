@@ -1,6 +1,6 @@
 package com.example.lib;
 
-import javax.sound.sampled.Mixer;
+
 
 public abstract class MixerProvider {
     public MixerProvider() {
@@ -18,7 +18,7 @@ public abstract class MixerProvider {
         return false;
     }
 
-    public abstract Mixer.Info[] getMixerInfo();
+    public abstract com.example.lib.Mixer.Info[] getMixerInfo();
 
     public abstract Mixer getMixer(Mixer.Info var1);
 }

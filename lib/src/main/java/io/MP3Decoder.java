@@ -2,18 +2,16 @@ package io;
 
 import com.example.lib.AudioFormat;
 import com.example.lib.AudioInputStream;
+import com.example.lib.AudioSystem;
+import com.example.lib.FloatSampleBuffer;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
 
-import javax.sound.sampled.AudioSystem;
 
 
-
-
-import org.tritonus.share.sampled.FloatSampleBuffer;
 
 
 

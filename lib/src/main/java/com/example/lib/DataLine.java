@@ -30,7 +30,7 @@ public interface DataLine extends Line{
 
     float getLevel();
 
-    public static class Info extends javax.sound.sampled.Line.Info {
+    public static class Info extends Line.Info {
         private final AudioFormat[] formats;
         private final int minBufferSize;
         private final int maxBufferSize;
@@ -85,7 +85,7 @@ public interface DataLine extends Line{
             return this.maxBufferSize;
         }
 
-        public boolean matches(javax.sound.sampled.Line.Info var1) {
+        public boolean matches(Line.Info var1) {
             if (!super.matches(var1)) {
                 return false;
             } else {

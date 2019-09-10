@@ -8,7 +8,7 @@ public class TAudioFormat extends AudioFormat {
     private Map m_properties;
     private Map m_unmodifiableProperties;
 
-    public TAudioFormat(com.example.lib.Encoding encoding, float sampleRate, int sampleSizeInBits, int channels, int frameSize, float frameRate, boolean bigEndian, Map properties) {
+    public TAudioFormat(AudioFormat.Encoding encoding, float sampleRate, int sampleSizeInBits, int channels, int frameSize, float frameRate, boolean bigEndian, Map properties) {
         super(encoding, sampleRate, sampleSizeInBits, channels, frameSize, frameRate, bigEndian);
         this.initMaps(properties);
     }

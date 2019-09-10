@@ -425,7 +425,7 @@ public class AudioSystem {
         AudioInputStream var2 = null;
         int var3 = 0;
 
-        while(var3 < var1.size()) {
+       /* while(var3 < var1.size()) {
             AudioFileReader var4 = (AudioFileReader)var1.get(var3);
 
             try {
@@ -434,7 +434,7 @@ public class AudioSystem {
             } catch (UnsupportedAudioFileException var6) {
                 ++var3;
             }
-        }
+        }*/
 
         if (var2 == null) {
             throw new UnsupportedAudioFileException("could not get audio input stream from input stream");
@@ -447,7 +447,7 @@ public class AudioSystem {
         List var1 = getAudioFileReaders();
         AudioInputStream var2 = null;
         int var3 = 0;
-
+/*
         while(var3 < var1.size()) {
             AudioFileReader var4 = (AudioFileReader)var1.get(var3);
 
@@ -457,7 +457,7 @@ public class AudioSystem {
             } catch (UnsupportedAudioFileException var6) {
                 ++var3;
             }
-        }
+        }*/
 
         if (var2 == null) {
             throw new UnsupportedAudioFileException("could not get audio input stream from input URL");
@@ -471,7 +471,7 @@ public class AudioSystem {
         AudioInputStream var2 = null;
         int var3 = 0;
 
-        while(var3 < var1.size()) {
+/*        while(var3 < var1.size()) {
             AudioFileReader var4 = (AudioFileReader)var1.get(var3);
 
             try {
@@ -480,7 +480,7 @@ public class AudioSystem {
             } catch (UnsupportedAudioFileException var6) {
                 ++var3;
             }
-        }
+        }*/
 
         if (var2 == null) {
             throw new UnsupportedAudioFileException("could not get audio input stream from input file");

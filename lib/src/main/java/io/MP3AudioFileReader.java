@@ -2,7 +2,6 @@ package io;
 
 import com.example.lib.AudioFileFormat;
 import com.example.lib.AudioFormat;
-import com.example.lib.Encoding;
 import com.example.lib.MpegAudioFileFormat;
 import com.example.lib.MpegAudioFormat;
 import com.example.lib.MpegEncoding;
@@ -28,7 +27,7 @@ import javazoom.jl.decoder.Header;
 public class MP3AudioFileReader extends TAudioFileReader {
     public static final int	INITAL_READ_LENGTH	= 128000;
     public  static final int MARK_LIMIT = INITAL_READ_LENGTH + 1;
-    public final Encoding[][] sm_aEncodings= {
+    public final AudioFormat.Encoding[][] sm_aEncodings= {
             { MpegEncoding.MPEG1L1,  MpegEncoding.MPEG2L3 },
             { MpegEncoding.MPEG1L1, MpegEncoding.MPEG1L2, MpegEncoding.MPEG1L3 },
             { MpegEncoding.MPEG2DOT5L1, MpegEncoding.MPEG2DOT5L2, MpegEncoding.MPEG2DOT5L3 }
@@ -118,7 +117,7 @@ public class MP3AudioFileReader extends TAudioFileReader {
         int nHeader = AudioSystem.NOT_SPECIFIED;
         int nTotalMS = AudioSystem.NOT_SPECIFIED;
         boolean nVBR = false;
-        Encoding encoding = null;
+        AudioFormat.Encoding encoding = null;
         try
         {
             Bitstream m_bitstream = new Bitstream(pis);

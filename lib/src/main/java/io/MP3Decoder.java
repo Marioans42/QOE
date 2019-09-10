@@ -1,27 +1,20 @@
 package io;
 
+import com.example.lib.AudioFormat;
+import com.example.lib.AudioInputStream;
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PushbackInputStream;
-import java.util.HashMap;
 
-import javax.sound.sampled.AudioFileFormat;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
+
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.UnsupportedAudioFileException;
 
-import javazoom.jl.decoder.Bitstream;
-import javazoom.jl.decoder.Header;
-import javazoom.spi.mpeg.sampled.file.MpegAudioFileFormat;
-import javazoom.spi.mpeg.sampled.file.MpegAudioFormat;
-import javazoom.spi.mpeg.sampled.file.MpegEncoding;
-import javazoom.spi.mpeg.sampled.file.MpegFileFormatType;
 
-import org.tritonus.share.TDebug;
+
+
 import org.tritonus.share.sampled.FloatSampleBuffer;
-import org.tritonus.share.sampled.file.TAudioFileReader;
+
 
 
 public class MP3Decoder implements Decoder

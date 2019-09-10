@@ -3,6 +3,7 @@ package io;
 import com.example.lib.AudioFileFormat;
 import com.example.lib.AudioFormat;
 import com.example.lib.Encoding;
+import com.example.lib.MpegAudioFileFormat;
 import com.example.lib.MpegAudioFormat;
 import com.example.lib.MpegEncoding;
 import com.example.lib.MpegFileFormatType;
@@ -20,7 +21,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 import javazoom.jl.decoder.Bitstream;
 import javazoom.jl.decoder.Header;
-import javazoom.spi.mpeg.sampled.file.MpegAudioFileFormat;
+
 
 
 

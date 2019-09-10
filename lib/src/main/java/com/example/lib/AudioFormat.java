@@ -14,7 +14,7 @@ public class AudioFormat {
     protected boolean bigEndian;
     private HashMap<String, Object> properties;
 
-    public AudioFormat(com.example.lib.Encoding var1, float var2, int var3, int var4, int var5, float var6, boolean var7) {
+    public AudioFormat(Encoding var1, float var2, int var3, int var4, int var5, float var6, boolean var7) {
         this.encoding = var1;
         this.sampleRate = var2;
         this.sampleSizeInBits = var3;
@@ -30,9 +30,10 @@ public class AudioFormat {
         this.properties = new HashMap(var8);
     }
 
-   /* public AudioFormat(float var1, int var2, int var3, boolean var4, boolean var5) {
+    public AudioFormat(float var1, int var2, int var3, boolean var4, boolean var5) {
         this(var4 ? Encoding.PCM_SIGNED : Encoding.PCM_UNSIGNED, var1, var2, var3, var3 != -1 && var2 != -1 ? (var2 + 7) / 8 * var3 : -1, var1, var5);
-    }*/
+    }
+
 
     public Encoding getEncoding() {
         return this.encoding;
@@ -77,7 +78,7 @@ public class AudioFormat {
         return this.properties == null ? null : this.properties.get(var1);
     }
 
-    public boolean matches(javax.sound.sampled.AudioFormat var1) {
+    public boolean matches(AudioFormat var1) {
         return var1.getEncoding().equals(this.getEncoding()) && (var1.getChannels() == -1 || var1.getChannels() == this.getChannels()) && (var1.getSampleRate() == -1.0F || var1.getSampleRate() == this.getSampleRate()) && (var1.getSampleSizeInBits() == -1 || var1.getSampleSizeInBits() == this.getSampleSizeInBits()) && (var1.getFrameRate() == -1.0F || var1.getFrameRate() == this.getFrameRate()) && (var1.getFrameSize() == -1 || var1.getFrameSize() == this.getFrameSize()) && (this.getSampleSizeInBits() <= 8 || var1.isBigEndian() == this.isBigEndian());
     }
 
@@ -140,5 +141,34 @@ public class AudioFormat {
         return var1 + var2 + var3 + var4 + var5 + var6 + var7;
     }
 
+    public static class Encoding {
+        public static final Encoding PCM_SIGNED = new Encoding("PCM_SIGNED");
+        public static final Encoding PCM_UNSIGNED = new Encoding("PCM_UNSIGNED");
+        public static final Encoding PCM_FLOAT = new Encoding("PCM_FLOAT");
+        public static final Encoding ULAW = new Encoding("ULAW");
+        public static final Encoding ALAW = new Encoding("ALAW");
+        private String name;
 
+        public Encoding(String var1) {
+            this.name = var1;
+        }
+
+        public final boolean equals(Object var1) {
+            if (this.toString() != null) {
+                return var1 instanceof javax.sound.sampled.AudioFormat.Encoding ? this.toString().equals(var1.toString()) : false;
+            } else {
+                return var1 != null && var1.toString() == null;
+            }
+        }
+
+        public final int hashCode() {
+            return this.toString() == null ? 0 : this.toString().hashCode();
+        }
+
+        public final String toString() {
+            return this.name;
+        }
+    }
 }
+
+

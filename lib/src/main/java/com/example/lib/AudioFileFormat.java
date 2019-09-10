@@ -80,4 +80,39 @@ public class AudioFileFormat {
 
         return new String(var1);
     }
+
+    public static class Type {
+        public static final com.example.lib.Type WAVE = new com.example.lib.Type("WAVE", "wav");
+        public static final com.example.lib.Type AU = new com.example.lib.Type("AU", "au");
+        public static final com.example.lib.Type AIFF = new com.example.lib.Type("AIFF", "aif");
+        public static final com.example.lib.Type AIFC = new com.example.lib.Type("AIFF-C", "aifc");
+        public static final com.example.lib.Type SND = new com.example.lib.Type("SND", "snd");
+        private final String name;
+        private final String extension;
+
+        public Type(String var1, String var2) {
+            this.name = var1;
+            this.extension = var2;
+        }
+
+        public final boolean equals(Object var1) {
+            if (this.toString() != null) {
+                return var1 instanceof com.example.lib.Type ? this.toString().equals(var1.toString()) : false;
+            } else {
+                return var1 != null && var1.toString() == null;
+            }
+        }
+
+        public final int hashCode() {
+            return this.toString() == null ? 0 : this.toString().hashCode();
+        }
+
+        public final String toString() {
+            return this.name;
+        }
+
+        public String getExtension() {
+            return this.extension;
+        }
+    }
 }

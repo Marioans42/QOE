@@ -4,13 +4,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+
+
 public class TAudioFileFormat extends AudioFileFormat{
     private Map m_properties;
     private Map m_unmodifiableProperties;
 
-/*    public TAudioFileFormat(Type type, AudioFormat audioFormat, int nLengthInFrames, int nLengthInBytes) {
+    public TAudioFileFormat(Type type, AudioFormat audioFormat, int nLengthInFrames, int nLengthInBytes) {
         super(type, nLengthInBytes, audioFormat, nLengthInFrames);
-    }*/
+    }
 
     public TAudioFileFormat(com.example.lib.Type type, AudioFormat audioFormat, int nLengthInFrames, int nLengthInBytes, Map properties) {
         super(type, nLengthInBytes, audioFormat, nLengthInFrames);

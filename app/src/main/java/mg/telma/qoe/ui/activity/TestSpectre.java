@@ -23,13 +23,20 @@ import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.nio.ShortBuffer;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-import analysis.FFT;
-import io.MP3Decoder;
+import javazoom.jl.decoder.Bitstream;
+import javazoom.jl.decoder.BitstreamException;
+import javazoom.jl.decoder.Decoder;
+import javazoom.jl.decoder.DecoderException;
+import javazoom.jl.decoder.SampleBuffer;
 import mg.telma.qoe.R;
 import mg.telma.qoe.utils.Complex;
 
@@ -228,40 +235,135 @@ public class TestSpectre extends AppCompatActivity implements AdapterView.OnItem
         }
     }//end main class
 
-    ShortBuffer mSamples; // the samples to play
-    int mNumSamples;
-    final int SAMPLE_RATE = 44100;
-    boolean mShouldContinue;
-
+    int startMs =10;
+    int maxMs = 5000;
     private void test() throws Exception {
 
-        int minBufferSize = AudioTrack.getMinBufferSize(SAMPLE_RATE, AudioFormat.CHANNEL_OUT_MONO,
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream(1024);
+        N=128;
+        float totalMs = 0;
+        double[] x = new double[N];
+        boolean seeking = true;
+        File file = new File(getFilesDir()+"/got.mp3");
+        //File file1 = new File(getFilesDir()+"/got.mp3");
+        System.out.println("the data "+ getFilesDir()+"/mozart.mp3");
+        InputStream inputStream = new BufferedInputStream(new FileInputStream(file), 8 * 128);
+        Number [] tograph = new Number[N];
+        int bufferSize = AudioTrack.getMinBufferSize(44100, AudioFormat.CHANNEL_OUT_MONO,
                 AudioFormat.ENCODING_PCM_16BIT);
-        int bufferSize = 512;
+
         AudioTrack audioTrack = new AudioTrack(
                 AudioManager.STREAM_MUSIC,
-                SAMPLE_RATE,
+                44100,
                 AudioFormat.CHANNEL_OUT_MONO,
                 AudioFormat.ENCODING_PCM_16BIT,
                 bufferSize,
                 AudioTrack.MODE_STREAM);
-System.out.println("Bonjour");
 
-       /* FileInputStream fin = new FileInputStream(path);
-        DataInputStream dis = new DataInputStream(fin);*/
+        try {
+            Bitstream bitstream = new Bitstream(inputStream);
+            Decoder decoder = new Decoder();
 
-        audioTrack.play();
-      /*  while ((i = dis.read(s, 0, bufferSize)) > -1)
-        {
-            at.write(s, 0, i);
+            boolean done = false;
+            while (! done) {
+                javazoom.jl.decoder.Header frameHeader = bitstream.readFrame();
+                if (frameHeader == null) {
+                    done = true;
+                } else {
+                    totalMs += frameHeader.ms_per_frame();
 
+
+                    seeking = false;
+
+
+                    if (! seeking) {
+                        SampleBuffer output = (SampleBuffer) decoder.decodeFrame(frameHeader, bitstream);
+                        if (output.getSampleFrequency() != 44100
+                                || output.getChannelCount() != 2) {
+                            // throw new com.mindtherobot.libs.mpg.DecoderException("mono or non-44100 MP3 not supported");
+                        }
+
+                        short[] pcm = output.getBuffer();
+                        byte[] bs;
+                        int index=0;
+                        ByteBuffer buffer;
+                        buffer = ByteBuffer.allocate(2*pcm.length);
+
+                        for (short s : pcm) {
+//                      outStream.write(s & 0xff);
+//                      outStream.write((s >> 8 ) & 0xff);
+
+
+                            buffer.putShort(s);
+
+
+
+                        }
+
+                        byte[] dataaudio = buffer.array();
+                        //Complex[] complexData = new Complex[dataaudio.length];
+
+                       /* for (int i = 0; i < complexData.length; i++) {
+                            complexData[i] = new Complex(dataaudio[i], 0);
+                        }*/
+
+                        //Complex[] fftResult = mg.telma.qoe.utils.FFT.fft(complexData);
+                        //return buffer.array();
+
+
+
+
+
+                        audioTrack.write(dataaudio, 0, dataaudio.length);
+                        // audioTrack.play();
+                        for (k=0;k<N;k++){
+
+                            //implement fft
+                            for (j=0;j<N;j++){
+                                xc = new Complex(dataaudio[j],0);
+                                F = new Complex(0,(2*Math.PI*(j-1)*(k-1))/N);
+                                Xc =xc.times(F.exp());
+                                Xre = Xre + Xc.re();
+                                Xim = Xim + Xc.im();
+                            }
+                            //send result to tograph to be displayed later
+                            tograph[k] = Math.sqrt(Math.pow(Xre,2)+Math.pow(Xim,2));
+                            //reset Xim & Xre
+                            Xim=0;
+                            Xre=0;
+                        }
+
+                        //set graph title & labels
+                        graph.setTitle("Absolute FFT");
+                        graph.setRangeLabel("Amplitude");
+                        graph.setDomainLabel("Frequency (Hz*N/Fs)");
+
+
+//clear existing graph
+                        graph.clear();
+                        //put data from tograph into a series to be added to the graph
+                        gData = new SimpleXYSeries(Arrays.asList(tograph), SimpleXYSeries.ArrayFormat.XY_VALS_INTERLEAVED, "gData");
+                        //add series with line and dot format specified earlier to graph
+                        graph.addSeries(gData, gDataFormat);
+                        graph.redraw();
+                    }
+
+                    if (totalMs >= (startMs + maxMs)) {
+                        done = true;
+                    }
+                }
+                bitstream.closeFrame();
+            }
+
+            //return outStream.toByteArray();
+        } catch (BitstreamException e) {
+            throw new IOException("Bitstream error: " + e);
+        } catch (DecoderException e) {
+            Log.w("data", "Decoder error", e);
+            ;
+        } finally {
+            // IOUtils.safeClose(inputStream);
         }
-        at.stop();
-        at.release();
-        dis.close();
-        fin.close();*/
-
-
         /*Plot plot = new Plot( "Spectral Flux", 1024, 512 );
         plot.plot( spectralFlux, 1, Color.red );
         new PlaybackVisualizer( plot, 1024, new MP3Decoder( new FileInputStream( FILE ) ) );*/

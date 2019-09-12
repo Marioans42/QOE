@@ -80,10 +80,10 @@ dependencies {
     implementation 'com.jjoe64:graphview:4.2.2'
     implementation "com.androidplot:androidplot-core:1.5.7"
 
+    implementation group: 'javazoom', name: 'jlayer', version: '1.0.1'
+
     implementation files('libs/achartengine-1.2.0.jar')
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
-
-    implementation project(path: ':lib')
 
     assets('com.google.android.exoplayer:exoplayer:2.7.3') { exclude group: 'com.android.support' }
 

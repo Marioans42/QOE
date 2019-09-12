@@ -61,7 +61,7 @@ public class InternetFragment extends Fragment {
         Log.d(TAG, "onCreateView: started.");
         final Button startButton =  view.findViewById(R.id.startButton);
         final DecimalFormat dec = new DecimalFormat("#.##");
-        startButton.setText("Start Test");
+        startButton.setText("Lancer Test");
 
         tempBlackList = new HashSet<>();
 
@@ -109,7 +109,7 @@ public class InternetFragment extends Fragment {
                                     Toast.makeText(getActivity().getApplicationContext(), "No Connection...", Toast.LENGTH_LONG).show();
                                     startButton.setEnabled(true);
                                     startButton.setTextSize(16);
-                                    startButton.setText("Restart Test");
+                                    startButton.setText("Relancer");
                                 }
                             });
                             getSpeedTestHostsHandler = null;
@@ -460,7 +460,7 @@ public class InternetFragment extends Fragment {
                         public void run() {
                             startButton.setEnabled(true);
                             startButton.setTextSize(16);
-                            startButton.setText("Restart Test");
+                            startButton.setText("Relancer");
                         }
                     });
 
